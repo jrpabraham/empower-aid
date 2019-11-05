@@ -2,7 +2,7 @@
 ## Install missing packages ##
 ##############################
 
-setwd("/Users/justin/Repos/empower-aid")
+setwd(path to folder titled "empower-aid")
 set.seed(47269801)
 
 required.packages <- c("tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi")
@@ -16,7 +16,7 @@ lapply(required.packages, library, character.only = TRUE)
 ## Define functions ##
 ######################
 
-## RegTest conducts asymptotic tests from linear model ##
+## RegTest estimates a linear model and conducts statistical inference for linear combinations of coefficients ##
 
 RegTest <- function(equation, clustvars, hypotheses, data) {
 
@@ -47,7 +47,7 @@ RegTest <- function(equation, clustvars, hypotheses, data) {
 
 }
 
-## PermTest returns MC approximations of the exact p-value ##
+## PermTest estimates a linear model and conducts statistical inference by permuting the treatment assignment (randomization inference) ##
 
 PermTest <- function(equation, treatvars, clustvars, hypotheses, iterations, data) {
 
@@ -83,7 +83,7 @@ PermTest <- function(equation, treatvars, clustvars, hypotheses, iterations, dat
 
 }
 
-## FDR returns minimum q-values ##
+## FDR returns p-values correcting for the false discovery rate for a set of hypothesis tests ##
 
 FDR <- function(pvals, step) {
 
@@ -1024,8 +1024,8 @@ ses.lad.y2.graph <- ses.lad.y2.graph +
 
 # Arrange figures in grid #
 
-FigureK1 <- plot_grid(vid.graph, sel.graph, ses.lad.y2.graph, sti.graph, nrow = 1, ncol = 4, labels = c("A. Economic Behavior", "B. Psychological Outcomes", "", ""), label_size = 12, scale = 0.85, hjust = -0.2)
-save_plot("graphics/FigureK1.png", FigureK1, base_height = 3, base_width = 10, dpi=300)
+Figure1 <- plot_grid(vid.graph, sel.graph, ses.lad.y2.graph, sti.graph, nrow = 1, ncol = 4, labels = c("A. Economic Behavior", "B. Psychological Outcomes", "", ""), label_size = 12, scale = 0.85, hjust = -0.2)
+save_plot("graphics/Figure1.png", Figure1, base_height = 3, base_width = 10, dpi=300)
 
 ################################
 ## Forecasting bar graph (2A) ##

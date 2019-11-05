@@ -2,7 +2,7 @@
 ## Install missing packages ##
 ##############################
 
-setwd("/Users/justin/Repos/empower-aid")
+setwd(path to folder titled "empower-aid")
 set.seed(47269801)
 
 required.packages <- c("dplyr", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "iptools", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif")
@@ -15,7 +15,7 @@ lapply(required.packages, library, character.only = TRUE)
 ## Define functions ##
 ######################
 
-## RegTest conducts asymptotic tests from linear model ##
+## RegTest estimates a linear model and conducts statistical inference for linear combinations of coefficients ##
 
 RegTest <- function(equation, clustvars, hypotheses, data) {
 
@@ -46,7 +46,7 @@ RegTest <- function(equation, clustvars, hypotheses, data) {
 
 }
 
-## PermTest returns MC approximations of the exact p-value ##
+## PermTest estimates a linear model and conducts statistical inference by permuting the treatment assignment (randomization inference) ##
 
 PermTest <- function(equation, treatvars, clustvars, hypotheses, iterations, data) {
 
@@ -82,7 +82,7 @@ PermTest <- function(equation, treatvars, clustvars, hypotheses, iterations, dat
 
 }
 
-## FDR returns minimum q-values ##
+## FDR returns p-values correcting for the false discovery rate for a set of hypothesis tests ##
 
 FDR <- function(pvals, step) {
 
@@ -229,7 +229,7 @@ u1_df$com <- ifelse(u1_df$condition == "community", 1, 0)
 
 ## Recoding vars ##
 
-u1_df$spot1 <- recode(u1_df$spot1,"1=1;2=2;4=3")
+u1_df$spot1[which(u1_df$spot1 == 4)] <- 3
 u1_df$donation_me <- u1_df$donation_pov_1
 u1_df$donation_org <- u1_df$donation_pov_2
 u1_df$donated <- as.logical(u1_df$donation_org > 0)
@@ -766,5 +766,5 @@ donate.graph <- donate.graph +
 
 # Arrange figures in grid #
 
-FigureU1 <- plot_grid(amount.graph, donate.graph, nrow = 1, ncol = 2, labels = c("", "Donor support"), hjust = 0.5, label_size = 12, scale = 0.85)
-save_plot("graphics/FigureU1.png", FigureU1, base_height = 4, base_width = 7, dpi=300)
+FigureS3 <- plot_grid(amount.graph, donate.graph, nrow = 1, ncol = 2, labels = c("", "Donor support"), hjust = 0.5, label_size = 12, scale = 0.85)
+save_plot("graphics/FigureS3.png", FigureS3, base_height = 4, base_width = 7, dpi=300)
