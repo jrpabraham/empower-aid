@@ -950,95 +950,6 @@ kable(ms.oth.neg.prop, digits = round(3))
 
 summary(lm(neg.prop ~ condition.order, data=tidy.codes.sum))
 
-###################################
-## Forest plot for main findings ##
-###################################
-
-hypotheses <- c("treatInd = 0", "treatCom = 0", "treatInd - treatCom = 0")
-depvars <- c("vid.num", "sav.amt", "msg.dec", "sel.score.z", "sti.score.z", "aff.score.z", "msg.avg", "que.smrd", "ses.lad.now.z", "ses.lad.y2.z")
-depvarnames <- c("No. of videos", "Amount saved", "Recorded message", "Self-Efficacy (z-score)", "Stigma (z-score)", "Affect (z-score)", "Message support", "Query ordering", "Social status (z-score)", "Anticipated social mobility (z-score)")
-
-RES.forest <- matrix(nrow = 1, ncol = 6)
-
-for (depvar in depvars) {
-
-    for (h in hypotheses) {
-
-        eqn <- paste(depvar, "~ treat", sep = " ")
-        RES.line <- RegTest(eqn, clustvars = k1_df$survey.id, hypotheses = c(h), data = k1_df)
-        RES.line[5] <- mean(k1_df[which(k1_df$treat == "Pov"), depvar])
-        RES.line[6] <- sd(k1_df[which(k1_df$treat == "Pov"), depvar])
-        RES.line <- as.character(round(RES.line, 3))
-        RES.forest <- rbind(RES.forest, RES.line)
-
-    }
-
-    RES.forest <- rbind(RES.forest, c(" ", " ", " ", " ", " ", " "))
-
-}
-
-depnamelist <- c(" ")
-
-for (name in depvarnames) {
-
-    depnamelist <- c(depnamelist, name, " ", " ", " ")
-
-}
-
-RES.forest <- cbind(depnamelist[2:length(depnamelist)], RES.forest[2:nrow(RES.forest), ])
-RES.forest <- cbind(RES.forest, as.double(RES.forest[, 2]) + 1.96 * as.double(RES.forest[, 4]))
-RES.forest <- cbind(RES.forest, as.double(RES.forest[, 2]) - 1.96 * as.double(RES.forest[, 4]))
-
-## In raw units ##
-
-png("graphics/forestplotraw.png", width = 640, height = 960)
-
-forestplot(labeltext = RES.forest[, 1], graph.pos = 2,
-           mean = as.double(RES.forest[, 2]),
-           lower = as.double(RES.forest[, 9]), upper = as.double(RES.forest[, 8]),
-           xlab = "Treatment effect (raw units)",
-           hrzl_lines=list("3" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "11" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "19" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "27" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "35" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999')),
-           txt_gp = fpTxtGp(label = gpar(cex = 1.5),
-                              ticks = gpar(cex = 1.1),
-                              xlab = gpar(cex  =  1.2),
-                              title = gpar(cex  =  1.2)),
-           col = fpColors(box = "black", lines = "black", zero  =  "gray50"),
-           zero = 0, cex = 0.9, lineheight  =  "auto", xticks = seq(-0.6, 0.6, by = 0.1),
-           clip = c(-0.6,0.6), boxsize = 0.3, colgap = unit(1, "mm"), lwd.ci = 2, ci.vertices = TRUE, ci.vertices.height = 0.3)
-
-dev.off()
-
-## In standardized units ##
-
-RES.forest[, 2] <- as.character((as.double(RES.forest[, 2]) - as.double(RES.forest[, 5])) / as.double(RES.forest[, 6]))
-RES.forest[, 8] <- as.character((as.double(RES.forest[, 8]) - as.double(RES.forest[, 5])) / as.double(RES.forest[, 6]))
-RES.forest[, 9] <- as.character((as.double(RES.forest[, 9]) - as.double(RES.forest[, 5])) / as.double(RES.forest[, 6]))
-
-png("graphics/forestplotstd.png", width = 640, height = 960)
-
-forestplot(labeltext = RES.forest[, 1], graph.pos = 2,
-           mean = as.double(RES.forest[, 2]),
-           lower = as.double(RES.forest[, 9]), upper = as.double(RES.forest[, 8]),
-           xlab = "Treatment effect (std. units)",
-           hrzl_lines=list("3" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "11" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "19" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "27" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999'),
-                          "35" = gpar(lwd=100, lineend="butt", columns=c(1:2), col='#999999')),
-           txt_gp = fpTxtGp(label = gpar(cex = 1.5),
-                              ticks = gpar(cex = 1.1),
-                              xlab = gpar(cex  =  1.2),
-                              title = gpar(cex  =  1.2)),
-           col = fpColors(box = "black", lines = "black", zero  =  "gray50"),
-           zero = 0, cex = 0.9, lineheight  =  "auto", xticks = seq(-8, 8, by = 1),
-           clip = c(-8,8), boxsize = 0.3, colgap = unit(1, "mm"), lwd.ci = 2, ci.vertices = TRUE, ci.vertices.height = 0.3)
-
-dev.off()
-
 ##################################
 ## Bar graphs for main findings ##
 ##################################
@@ -1157,8 +1068,6 @@ Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
         plot.title = element_text(size=10, face="bold"),
         text = element_text(size=8)) +
         geom_signif(y_position=c(0.82, 0.67, 0.72), xmin=c(0.7, 1.7, 1.7), xmax=c(1.3, 2, 2.3), annotation=c("*", "*", "*"), vjust = 0.2)
-
-save_plot("graphics/Figure2A.png", Figure2A, base_height = 4, base_width = 3.3, dpi=300)
 
 ###############################
 ## Histogram of video choice ##
@@ -1360,8 +1269,6 @@ Figure2B <- ggplot(df2c, aes(x = N, y = value, color = variable)) +
     guides(fill = guide_legend(keywidth = 1, keyheight = 1),
            linetype=guide_legend(keywidth = 1.5, keyheight = 0.7),
            colour=guide_legend(keywidth = 1.5, keyheight = 0.7))
-
-save_plot("graphics/Figure2B.png", Figure2B, base_height = 4, base_width = 6.4, dpi=300)
 
 Figure2 <- plot_grid(Figure2A, Figure2B, nrow = 1, ncol = 2, rel_widths = c(1, 1.61803398875))
 save_plot("graphics/Figure2.png", Figure2, base_height = 4, base_width = 8, dpi=300)
