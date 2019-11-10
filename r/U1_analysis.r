@@ -2,14 +2,12 @@
 ## Install missing packages ##
 ##############################
 
-setwd(path to folder titled "empower-aid")
 set.seed(47269801)
 
-required.packages <- c("dplyr", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "iptools", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif")
-packages.missing <- required.packages[!required.packages %in% installed.packages()[,"Package"]]
+install.packages("pacman")
+library("pacman")
 
-if(length(packages.missing) > 0) {install.packages(required.packages, repo="https://cran.cnr.berkeley.edu/")}
-lapply(required.packages, library, character.only = TRUE)
+p_load("here", "dplyr", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "iptools", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif")
 
 ######################
 ## Define functions ##
@@ -213,8 +211,8 @@ FTable <- function(results, note) {
 
 ## Read data ##
 
-varnames <- as.vector(read.delim(file = "data/U1_MTurk_Eligible.csv", sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", nrows = 1))
-u1_df <- read.delim(file = "data/U1_MTurk_Eligible.csv", sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", skip = 1, col.names = varnames)
+varnames <- as.vector(read.delim(file = here("data", "U1_MTurk_Eligible.csv"), sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", nrows = 1))
+u1_df <- read.delim(file = here("data", "U1_MTurk_Eligible.csv"), sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", skip = 1, col.names = varnames)
 
 ## Treatment assignment ##
 
@@ -272,7 +270,7 @@ u1_df$is.religi.c <- scale(u1_df$is.religi, scale = FALSE)
 u1_df$is.chr.c <- scale(u1_df$is.chr, scale = FALSE)
 u1_df$is.dem.c <- scale(u1_df$is.dem, scale = FALSE)
 
-write.csv(u1_df, file = "data/U1_Clean_Data.csv", na = "")
+write.csv(u1_df, file = here("data", "U1_Clean_Data.csv"), na = "")
 attach(u1_df)
 
 ############################
@@ -698,7 +696,7 @@ for (i in 1:6) {
 
 }
 
-print(appendix, target = "doc/U1_appendix.docx")
+print(appendix, target = here("doc", "U1_appendix.docx"))
 
 ##################################
 ## Bar graphs for main findings ##
@@ -767,4 +765,4 @@ donate.graph <- donate.graph +
 # Arrange figures in grid #
 
 FigureS3 <- plot_grid(amount.graph, donate.graph, nrow = 1, ncol = 2, labels = c("", "Donor support"), hjust = 0.5, label_size = 12, scale = 0.85)
-save_plot("graphics/FigureS3.png", FigureS3, base_height = 4, base_width = 7, dpi=300)
+save_plot(here("graphics", "FigureS3.png"), FigureS3, base_height = 4, base_width = 7, dpi = 300)

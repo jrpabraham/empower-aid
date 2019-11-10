@@ -1,9 +1,9 @@
 # How to deliver aid with narratives that empower: Experimental evidence and local forecasts from Kenya
 _Catherine Thomas, Nicholas Otis, Justin Abraham, Hazel Markus, and Gregory Walton_
 
-This is a public repository containing replication files for "How to deliver aid with narratives that empower: Experimental evidence and local forecasts from Kenya". Experimental data was collected using questionnaires programmed in Qualtrics. Results published in the manuscript and appendix were analyzed using R. Tables and figures can be replicated by running the appropriate R scripts on the provided data.
+This is a public repository containing replication files for "How to deliver aid with narratives that empower: Experimental evidence and local forecasts from Kenya". Experimental data was collected using questionnaires programmed in Qualtrics. Results published in the manuscript and appendix were analyzed using R. To replicate data analysis, first open `START.Rproj` in the root directory and run `K1_analysis.r` for the Kenya experiment and `U1_analysis.r` for the US experiment.
 
-### Directory
+### Directories
 
 + `data/`: Folder containing individual data.
 + `doc/`: Folder containing tables published in the manuscript and appendix.

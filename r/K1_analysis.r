@@ -1,16 +1,13 @@
-##############################
-## Install missing packages ##
-##############################
+###############################
+## Install required packages ##
+###############################
 
-setwd(path to folder titled "empower-aid")
 set.seed(47269801)
 
-required.packages <- c("tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi")
+install.packages("pacman")
+library("pacman")
 
-packages.missing <- required.packages[!required.packages %in% installed.packages()[,"Package"]]
-
-if(length(packages.missing) > 0) {install.packages(required.packages, repo="https://cran.cnr.berkeley.edu/")}
-lapply(required.packages, library, character.only = TRUE)
+p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi")
 
 ######################
 ## Define functions ##
@@ -224,8 +221,8 @@ FTable <- function(results, panels = 3, note) {
 
 ## Read data ##
 
-varnames <- as.vector(read.delim(file = "data/K1_Field_Survey.csv", sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", nrows = 1))
-k1_df <- read.delim(file = "data/K1_Field_Survey.csv", sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", skip = 2, nrows = 600, col.names = varnames)
+varnames <- as.vector(read.delim(file = here("data", "K1_Field_Survey.csv"), sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", nrows = 1))
+k1_df <- read.delim(file = here("data", "K1_Field_Survey.csv"), sep = ",", header = FALSE, stringsAsFactors = FALSE, na.strings = "", skip = 2, nrows = 600, col.names = varnames)
 
 ## Survey meta data ##
 
@@ -448,7 +445,7 @@ k1_df$soc.age.c <- scale(k1_df$soc.age, scale = FALSE)
 k1_df$ses.unemp.c <- scale(k1_df$ses.unemp, scale = FALSE)
 k1_df$soc.sav.c <- scale(k1_df$soc.sav, scale = FALSE)
 
-write.csv(k1_df, file = "data/K1_Clean_Data.csv", na = "")
+write.csv(k1_df, file = here("data", "K1_Clean_Data.csv"), na = "")
 attach(k1_df)
 
 ############################
@@ -937,7 +934,7 @@ appendix <- body_add_par(appendix , " ", style = "Normal") %>%
     body_add_par("Forecasting results", style = "Normal") %>%
     body_add_flextable(value = FTable(FR.tab, panels = 2, note = "Note: The dependent variable is the proportion selecting a business video for first video. Each of the 565 participants made three forecasts for a total of 565 x 3 = 1,695 observations. The first and second panels respectively exclude and include a dummy for own treatment assignment. The first column reports the mean difference between groups. The second column reports robust standard errors. The reference mean column lists the mean of the poverty alleviation condition for the first two hypotheses and the mean of the community empowerment condition for the third hypothesis."))
 
-print(appendix, target = "doc/K1_appendix.docx")
+print(appendix, target = here("doc", "K1_appendix.docx"))
 
 ###########################
 ## Stigma coding results ##
@@ -1025,7 +1022,7 @@ ses.lad.y2.graph <- ses.lad.y2.graph +
 # Arrange figures in grid #
 
 Figure1 <- plot_grid(vid.graph, sel.graph, ses.lad.y2.graph, sti.graph, nrow = 1, ncol = 4, labels = c("A. Economic Behavior", "B. Psychological Outcomes", "", ""), label_size = 12, scale = 0.85, hjust = -0.2)
-save_plot("graphics/Figure1.png", Figure1, base_height = 3, base_width = 10, dpi=300)
+save_plot(here("graphics", "Figure1.png"), Figure1, base_height = 3, base_width = 10, dpi=300)
 
 ################################
 ## Forecasting bar graph (2A) ##
@@ -1271,7 +1268,7 @@ Figure2B <- ggplot(df2c, aes(x = N, y = value, color = variable)) +
            colour=guide_legend(keywidth = 1.5, keyheight = 0.7))
 
 Figure2 <- plot_grid(Figure2A, Figure2B, nrow = 1, ncol = 2, rel_widths = c(1, 1.61803398875))
-save_plot("graphics/Figure2.png", Figure2, base_height = 4, base_width = 8, dpi=300)
+save_plot(here("graphics", "Figure2.png"), Figure2, base_height = 4, base_width = 8, dpi=300)
 
 #Figure S2
 
@@ -1432,4 +1429,4 @@ DenDat<-bind_rows(B1_EXP_DF_T,B2_EXP_DF_T,B1_FOR_DF_T,B2_FOR_DF_T%>%as.data.fram
           legend.position = "none")
 
 FigureS2 <- plot_grid(PanelA, PanelB, PanelC, PanelD, PanelE, PanelF, nrow = 3, ncol = 2, labels = c("Individual Empowerment", "Community Empowerment"), scale = 0.8, hjust = -0.2, align="hv")
-save_plot("graphics/FigureS2.png", FigureS2, base_height = 9, base_width = 6, dpi=300)
+save_plot(here("graphics", "FigureS2.png"), FigureS2, base_height = 9, base_width = 6, dpi=300)
