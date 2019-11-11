@@ -358,7 +358,7 @@ k1_df$que.smrd <- (2 * (k1_df$que.mrp - k1_df$que.mri)) / k1_df$que.nonm
 k1_df$que.smrd[is.na(k1_df$que.mrp)] <- 1
 k1_df$que.smrd[is.na(k1_df$que.mri)] <- -1
 
-# dealing with missing by filling in upper/lower bounds for now
+# missing values are imputed with upper and lower bounds
 
 ## Message of support (5-point scale) ##
 
@@ -1161,78 +1161,72 @@ print( getwd() )
 
 # Simulations ##################################################################
 
-  #Recode forecasts:
-  forecast$eva.msg1<-forecast$eva.msg1/10
-  forecast$eva.msg2<-forecast$eva.msg2/10
-  forecast$eva.msg3<-forecast$eva.msg3/10
+#Recode forecasts:
+forecast$eva.msg1<-forecast$eva.msg1/10
+forecast$eva.msg2<-forecast$eva.msg2/10
+forecast$eva.msg3<-forecast$eva.msg3/10
 
-  #Range of sample sizes
-  minsize=30
-  maxsize=150
+#Range of sample sizes
+minsize=30
+maxsize=150
 
-  numsims <- 10000
+numsims <- 10000
 
-  #Experimental
-  B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
-  B2_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
-  B1p_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
-  B2p_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
+#Experimental
+B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
+B2_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
+B1p_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
+B2p_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
 
-  for(i in minsize:maxsize){
+for(i in minsize:maxsize){
     TEMP <- simulatorEXP(k1_df, numsims, i)
     B1_EXP[i-(minsize-1)]<-as.vector(TEMP[1])
     B2_EXP[i-(minsize-1)]<-TEMP[2]
     B1p_EXP[i-(minsize-1)]<-TEMP[3]
     B2p_EXP[i-(minsize-1)]<-TEMP[4]
-  }
+}
 
-  B1_EXP_DF= as.data.frame(t(as.data.frame(B1_EXP)))
-  B2_EXP_DF= as.data.frame(t(as.data.frame(B2_EXP)))
-  B1p_EXP_DF= as.data.frame(t(as.data.frame(B1p_EXP)))
-  B2p_EXP_DF= as.data.frame(t(as.data.frame(B2p_EXP)))
+B1_EXP_DF= as.data.frame(t(as.data.frame(B1_EXP)))
+B2_EXP_DF= as.data.frame(t(as.data.frame(B2_EXP)))
+B1p_EXP_DF= as.data.frame(t(as.data.frame(B1p_EXP)))
+B2p_EXP_DF= as.data.frame(t(as.data.frame(B2p_EXP)))
 
-  #Forecasting
-  B1_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
-  B2_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
-  B1p_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
-  B2p_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
-  for(i in minsize:maxsize){
-    TEMP <- simulatorFOR(forecast, numsims, i)
-    B1_FOR[i-(minsize-1)]<-TEMP[1]
-    B2_FOR[i-(minsize-1)]<-TEMP[2]
-    B1p_FOR[i-(minsize-1)]<-TEMP[3]
-    B2p_FOR[i-(minsize-1)]<-TEMP[4]
-    }
+#Forecasting
+B1_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
+B2_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
+B1p_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
+B2p_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
+for(i in minsize:maxsize){
+TEMP <- simulatorFOR(forecast, numsims, i)
+B1_FOR[i-(minsize-1)]<-TEMP[1]
+B2_FOR[i-(minsize-1)]<-TEMP[2]
+B1p_FOR[i-(minsize-1)]<-TEMP[3]
+B2p_FOR[i-(minsize-1)]<-TEMP[4]
+}
 
-  B1_FOR_DF= as.data.frame(t(as.data.frame(B1_FOR)))
-  B2_FOR_DF= as.data.frame(t(as.data.frame(B2_FOR)))
-  B1p_FOR_DF= as.data.frame(t(as.data.frame(B1p_FOR)))
-  B2p_FOR_DF= as.data.frame(t(as.data.frame(B2p_FOR)))
+B1_FOR_DF= as.data.frame(t(as.data.frame(B1_FOR)))
+B2_FOR_DF= as.data.frame(t(as.data.frame(B2_FOR)))
+B1p_FOR_DF= as.data.frame(t(as.data.frame(B1p_FOR)))
+B2p_FOR_DF= as.data.frame(t(as.data.frame(B2p_FOR)))
 
-  B1_EXP_DF_ERROR<- -abs(B1_EXP_DF-0.0697)
-  B1_Exp_MeanError<-as.data.frame(rowMeans(B1_EXP_DF_ERROR))
+B1_EXP_DF_ERROR<- -abs(B1_EXP_DF-0.0697)
+B1_Exp_MeanError<-as.data.frame(rowMeans(B1_EXP_DF_ERROR))
 
-  B2_EXP_DF_ERROR<- -abs(B2_EXP_DF-0.1292)
-  B2_Exp_MeanError<-as.data.frame(rowMeans(B2_EXP_DF_ERROR))
+B2_EXP_DF_ERROR<- -abs(B2_EXP_DF-0.1292)
+B2_Exp_MeanError<-as.data.frame(rowMeans(B2_EXP_DF_ERROR))
 
-  B1_FOR_DF_ERROR<- -abs(B1_FOR_DF-0.0697)
-  B1_FOR_MeanError<-as.data.frame(rowMeans(B1_FOR_DF_ERROR))
+B1_FOR_DF_ERROR<- -abs(B1_FOR_DF-0.0697)
+B1_FOR_MeanError<-as.data.frame(rowMeans(B1_FOR_DF_ERROR))
 
-  B2_FOR_DF_ERROR<- -abs(B2_FOR_DF-0.1292)
-  B2_FOR_MeanError<-as.data.frame(rowMeans(B2_FOR_DF_ERROR))
+B2_FOR_DF_ERROR<- -abs(B2_FOR_DF-0.1292)
+B2_FOR_MeanError<-as.data.frame(rowMeans(B2_FOR_DF_ERROR))
 
-  B1_MIX_DF_ERROR<- -abs(B1_FOR_DF-0.0697)
-  B1_MIX_MeanError<-as.data.frame(rowMeans(B1_MIX_DF_ERROR))
+NUM<-c(minsize:maxsize)%>%as.data.frame()
 
-  B2_MIX_DF_ERROR<- -abs(B2_FOR_DF-0.1292)
-  B2_MIX_MeanError<-as.data.frame(rowMeans(B2_MIX_DF_ERROR))
+MeanERR<-bind_cols(B1_Exp_MeanError,B2_Exp_MeanError,B1_FOR_MeanError,B2_FOR_MeanError,  c(minsize:maxsize)%>%as.data.frame())
+names(MeanERR)<-c("B1_Exp_MeanError","B2_Exp_MeanError","B1_FOR_MeanError","B2_FOR_MeanError","N")
 
-  NUM<-c(minsize:maxsize)%>%as.data.frame()
-
-  MeanERR<-bind_cols(B1_Exp_MeanError,B2_Exp_MeanError,B1_FOR_MeanError,B2_FOR_MeanError,  c(minsize:maxsize)%>%as.data.frame())
-  names(MeanERR)<-c("B1_Exp_MeanError","B2_Exp_MeanError","B1_FOR_MeanError","B2_FOR_MeanError","N")
-
-  df2c <- melt(MeanERR, id = "N")
+df2c <- melt(MeanERR, id = "N")
 
   #Figure2B: Negative absolute error
 
