@@ -1,3 +1,7 @@
+# Author: Justin Abraham
+# R Version: R-3.6.2
+# RStudio Version: 1.2.5033
+
 ##############################
 ## Install missing packages ##
 ##############################
