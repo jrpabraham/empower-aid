@@ -1228,7 +1228,7 @@ forecast$eva.msg3<-forecast$eva.msg3/10
 minsize=30
 maxsize=150
 
-numsims <- 10
+numsims <- 10000
 
 #Experimental
 B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
