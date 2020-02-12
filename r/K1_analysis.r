@@ -535,6 +535,64 @@ appendix <- body_add_par(appendix , " ", style = "Normal") %>%
     body_add_par("Randomization balance checks on subject demographic characteristics", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: Each panel corresponds to a single hypothesis for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
+###########################################
+## Equivalence test for primary outcomes ##
+###########################################
+
+hypotheses <- c("treatInd = 0", "treatCom = 0", "treatInd - treatCom = 0")
+htitle <- c("Individual - Poverty", "Community - Poverty", "Individual - Community")
+depvars <- c("vid.num", "sav.amt", "msg.dec")
+depvarnames <- c("No. of videos", "Amount saved", "Recorded message")
+
+RES.print <- matrix(nrow = 1, ncol = 9)
+
+for (i in 1:3) {
+
+    RES.eq <- matrix(nrow = 1, ncol = 6)
+
+    for (depvar in depvars) {
+
+        firststage <- paste(depvar, "~ soc.fem + soc.age + soc.pri + ses.unemp", sep = " ")
+        predicted <- predict(lm(firststage, data = k1_df, na.action = na.omit))
+
+        secondstage <- paste("predicted", "~ treat", sep = " ")
+        RES.eq <- rbind(RES.eq, PermTest(secondstage, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df[complete.cases(soc.fem, soc.age, soc.pri, ses.unemp), "survey.id"], hypotheses = hypotheses[i], iterations = 10000, data = k1_df[complete.cases(soc.fem, soc.age, soc.pri, ses.unemp), ]))
+
+    }
+
+    RES.eq <- cbind(RES.eq[2:nrow(RES.eq), 1:ncol(RES.eq)], FDR(RES.eq[2:nrow(RES.eq), 4]))
+
+    if (hypotheses[i] == "treatInd - treatCom = 0") {
+        RES.eq <- cbind(RES.eq, colMeans(k1_df[which(k1_df$com == 1), depvars], na.rm = TRUE))
+    } else RES.eq <- cbind(RES.eq, colMeans(k1_df[which(k1_df$pov == 1), depvars], na.rm = TRUE))
+
+    RES.eq[, 5] <- round(RES.eq[, 5], 0)
+    RES.eq[, -5] <- format(round(RES.eq[, -5], 3), nsmall = 3)
+
+    RES.eq <- cbind(depvarnames, RES.eq)
+
+    colnames(RES.eq)[1] <- "Outcome"
+    colnames(RES.eq)[8] <- "Min. q-value"
+    colnames(RES.eq)[9] <- "Reference mean"
+
+    print("----------------------------------------------------------------", quote = FALSE)
+    print(paste("H_0:", htitle[i]), quote = FALSE)
+    print(RES.eq, quote = FALSE)
+
+    RES.eq <- rbind(c(htitle[i], "", "", "", "", "", "", "", ""), RES.eq)
+    RES.print <- rbind(RES.print, RES.eq)
+
+}
+
+RES.print[, c(1:9)] <- RES.print[, c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
+colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
+
+## Print table to doc ##
+
+appendix <- body_add_par(appendix , " ", style = "Normal") %>%
+    body_add_par("Equivalence tests on primary outcomes", style = "Normal") %>%
+    body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: This table computes predicted values of outcomes as a function of baseline covariates and regresses the predictions on the treatment indicators. Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of predicted outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
+
 ####################################
 ## Plain OLS for primary outcomes ##
 ####################################
@@ -1170,7 +1228,7 @@ forecast$eva.msg3<-forecast$eva.msg3/10
 minsize=30
 maxsize=150
 
-numsims <- 10000
+numsims <- 10
 
 #Experimental
 B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
