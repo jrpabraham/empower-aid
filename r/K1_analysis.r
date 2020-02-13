@@ -263,6 +263,8 @@ k1_df$msg3 <- recode(as.numeric(as.factor(k1_df$ORG_MESSAGE_3)), `3` = 2)
 
 ## Dataset for stigma coding ##
 
+d$sitename <- coalesce(d$r1_site, d$r2_site, d$r3_site, d$r4_site, d$r5_site) 
+
 tidy.codes.2 <- k1_df %>%
   dplyr::select(por.oth_1_RA_CODE, por.oth_2_RA_CODE, por.oth_3_RA_CODE,
                 ind.oth_1_RA_CODE, ind.oth_2_RA_CODE, ind.oth_3_RA_CODE,
@@ -271,16 +273,20 @@ tidy.codes.2 <- k1_df %>%
   dplyr::mutate_at(vars(matches("oth")),funs(as.factor)) %>%
   rename(oth.1_por = por.oth_1_RA_CODE, oth.2_por = por.oth_2_RA_CODE, oth.3_por = por.oth_3_RA_CODE,
          oth.1_ind = ind.oth_1_RA_CODE, oth.2_ind = ind.oth_2_RA_CODE, oth.3_ind = ind.oth_3_RA_CODE,
-         oth.1_com = com.oth_1_RA_CODE, oth.2_com = com.oth_2_RA_CODE, oth.3_com = com.oth_3_RA_CODE) %>%
-  gather(contains('oth'), key=prompt, value=oth.value) %>%
-   separate(prompt,
-          into = c("prompt", "condition2"),
-          sep = "_")
+         oth.1_com = com.oth_1_RA_CODE, oth.2_com = com.oth_2_RA_CODE, oth.3_com = com.oth_3_RA_CODE) 
 
-tidy.codes.2$oth.neg <- as.logical(tidy.codes.2$oth.value == "negative") 
-tidy.codes.2$oth.pos <- as.logical(tidy.codes.2$oth.value == "positive") 
+tidy.codes.2$oth.1 <- coalesce(tidy.codes.2$oth.1_por, tidy.codes.2$oth.1_ind, tidy.codes.2$oth.1_com) 
+tidy.codes.2$oth.2 <- coalesce(tidy.codes.2$oth.2_por, tidy.codes.2$oth.2_ind, tidy.codes.2$oth.2_com) 
+tidy.codes.2$oth.3 <- coalesce(tidy.codes.2$oth.3_por, tidy.codes.2$oth.3_ind, tidy.codes.2$oth.3_com) 
 
-tidy.codes.sum <- tidy.codes.2 %>%
+tidy.codes.3 <- tidy.codes.2 %>%
+  dplyr::select(oth.1, oth.2, oth.3, condition.order, survey.id) %>% 
+  gather(contains('oth'), key=prompt, value=oth.value)
+
+tidy.codes.3$oth.neg <- as.logical(tidy.codes.3$oth.value == "negative") 
+tidy.codes.3$oth.pos <- as.logical(tidy.codes.3$oth.value == "positive") 
+
+tidy.codes.sum <- tidy.codes.3 %>%
   group_by(survey.id) %>%
   mutate(neg.prop = sum(oth.value=="negative", na.rm=T) / length(which(!is.na(oth.value)))) %>%
   mutate(pos.prop = sum(oth.value=="positive", na.rm=T) / length(which(!is.na(oth.value)))) %>%
