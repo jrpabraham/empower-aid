@@ -263,8 +263,6 @@ k1_df$msg3 <- recode(as.numeric(as.factor(k1_df$ORG_MESSAGE_3)), `3` = 2)
 
 ## Dataset for stigma coding ##
 
-d$sitename <- coalesce(d$r1_site, d$r2_site, d$r3_site, d$r4_site, d$r5_site) 
-
 tidy.codes.2 <- k1_df %>%
   dplyr::select(por.oth_1_RA_CODE, por.oth_2_RA_CODE, por.oth_3_RA_CODE,
                 ind.oth_1_RA_CODE, ind.oth_2_RA_CODE, ind.oth_3_RA_CODE,
@@ -1008,10 +1006,11 @@ print(appendix, target = here("doc", "K1_appendix.docx"))
 ## Stigma coding results ##
 ###########################
 
+# This is exploratory analysis on the stigma qualitative coding
+
 ms.oth.neg.prop <- tidy.codes.sum %>% 
    group_by(condition.order) %>% 
    summarise(Prop_Neg = mean(neg.prop, na.rm=TRUE), Prop_Pos = mean(pos.prop, na.rm=TRUE), Prop_Amb=mean(amb.prop, na.rm=T), "n"=sum(!is.na(oth.value)))
-kable(ms.oth.neg.prop, digits = round(3))
 
 summary(lm(neg.prop ~ condition.order, data=tidy.codes.sum))
 
@@ -1023,13 +1022,6 @@ BarChart <- function(depvar, groupvar, data, title, ytitle, xtitle, fillcolor, b
 
     quo_groupvar <- enquo(groupvar)
     quo_depvar <- enquo(depvar)
-
-    # equation <- paste(quo_depvar, " ~ ", quo_groupvar)[2]
-    # model <- lm(equation, data = data, na.action = na.omit)
-    # model$vcov <- cluster.vcov(model, cluster = data$survey.id)
-    # hypotheses <- c(paste(levels(groupvar)[2], "= 0"), paste(levels(groupvar)[3], "= 0"), paste(levels(groupvar)[2], "=", levels(groupvar)[3]))
-
-    # model$test <- summary(glht(model, linfct = hypotheses, vcov = model$vcov))$test
 
     stats <- data[complete.cases(depvar), ] %>% group_by(!!quo_groupvar) %>% summarise(mean = mean(!!quo_depvar), sd = sd(!!quo_depvar), obs = length(!!quo_depvar))
     stats <- cbind(as.data.frame(table(treat))[, 1], as.data.frame(stats[, 2]), as.data.frame(stats[, 3] / sqrt(stats[, 4])))
@@ -1145,11 +1137,6 @@ h + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6
 ##################################
 ## Figures for synthetic pilots ##
 ##################################
-
-library(rstudioapi) # load it
-current_path <- getActiveDocumentContext()$path
-setwd(dirname(current_path ))
-print( getwd() )
 
 # Load data ####################################################################
 
