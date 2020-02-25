@@ -1012,7 +1012,7 @@ ses.lad.y2.graph <- BarChart(depvar = ses.lad.y2, groupvar = treat, data = k1_df
 # Annotate with significance levels #
 
 vid.graph <- vid.graph +
-    geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = ".", textsize = 7, y_position = 1.5, vjust = -0.2) + 
+    geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = "†", textsize = 3, y_position = 1.5, vjust = -0.2) + 
     geom_signif(comparisons=list(c("Poverty \n Alleviation", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 1.625, vjust = 0.2)
 
 

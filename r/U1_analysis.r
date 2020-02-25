@@ -713,13 +713,6 @@ BarChart <- function(depvar, groupvar, data, title, ytitle, xtitle, fillcolor, b
     quo_groupvar <- enquo(groupvar)
     quo_depvar <- enquo(depvar)
 
-    # equation <- paste(quo_depvar, " ~ ", quo_groupvar)[2]
-    # model <- lm(equation, data = data, na.action = na.omit)
-    # model$vcov <- cluster.vcov(model, cluster = data$survey.id)
-    # hypotheses <- c(paste(levels(groupvar)[2], "= 0"), paste(levels(groupvar)[3], "= 0"), paste(levels(groupvar)[2], "=", levels(groupvar)[3]))
-
-    # model$test <- summary(glht(model, linfct = hypotheses, vcov = model$vcov))$test
-
     stats <- data[complete.cases(depvar), ] %>% group_by(!!quo_groupvar) %>% summarise(mean = mean(!!quo_depvar), sd = sd(!!quo_depvar), obs = length(!!quo_depvar))
     stats <- cbind(as.data.frame(table(treat))[, 1], as.data.frame(stats[, 2]), as.data.frame(stats[, 3] / sqrt(stats[, 4])))
     colnames(stats) <- c(deparse(substitute(groupvar)), "mean", "SE")
@@ -763,7 +756,7 @@ status.graph <- BarChart(depvar = donor_status, groupvar = treat, data = u1_df, 
 # Annotate with significance levels #
 
 amount.graph <- amount.graph +
-    geom_signif(comparisons=list(c("Individual \n Empowerment", "Community \n Empowerment")), annotations= ".", textsize = 7, y_position = 50, vjust = -0.2, tip_length = 0.1)
+    geom_signif(comparisons=list(c("Individual \n Empowerment", "Community \n Empowerment")), annotations= "†", textsize = 3, y_position = 50, vjust = -0.2, tip_length = 0.1)
 
 donate.graph <- donate.graph + 
     geom_signif(comparisons=list(c("Individual \n Empowerment", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 0.925, vjust = 0.3, tip_length = 0.1)
