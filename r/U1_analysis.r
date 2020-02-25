@@ -700,6 +700,8 @@ for (i in 1:6) {
 
 }
 
+# Print results appendix #
+
 print(appendix, target = here("doc", "U1_appendix.docx"))
 
 ##################################
