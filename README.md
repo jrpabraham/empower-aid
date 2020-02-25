@@ -23,14 +23,13 @@ This is a public repository containing replication files for "How to deliver aid
 + `Forecast.r` is the source code for Study 2 that takes uses the Kenyan data to produce forecasting results and figures.
 + `U1_analysis.r` is the source code for Study 3 that takes the raw US data and outputs clean data, tables of results, and figures.
 
-### Outputs
+### List of Outputs
 
-+ `doc/K1_appendix.docx` is an RTF file which includes all of the tables related to Study 1.
-+ `doc/FC_appendix.docx` is an RTF file which includes the forecasting regression in Study 2.
-+ `doc/U1_appendix.docx` is an RTF file which includes all of the tables related to Study 3.
-
-+ `Figure1.png`
-+ `Figure2.png`
-+ `FigureS1.png`
-+ `FigureS2.png`
-+ `FigureS3.png`
+1. `doc/K1_appendix.docx` is an RTF file which includes all of the tables related to Study 1.
+1. `doc/FC_appendix.docx` is an RTF file which includes the forecasting regression in Study 2.
+1. `doc/U1_appendix.docx` is an RTF file which includes all of the tables related to Study 3.
+1. `graphics/Figure1.png`
+1. `graphics/Figure2.png`
+1. `graphics/FigureS1.png`
+1. `graphics/FigureS2.png`
+1. `graphics/FigureS3.png`
