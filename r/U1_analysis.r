@@ -285,7 +285,7 @@ big_border = fp_border(width = 2)
 std_border = fp_border(width = 1)
 
 appendix <- read_docx()
-appendix <- body_add_par(appendix , "Pre-specified data analysis for US donor experiment", style = "heading 1")
+appendix <- body_add_par(appendix , "Pre-specified data analysis for US donor experiment (Study 3)", style = "heading 1")
 
 ########################
 ## Summary statistics ##

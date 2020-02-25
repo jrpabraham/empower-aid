@@ -464,7 +464,7 @@ big_border = fp_border(width = 2)
 std_border = fp_border(width = 1)
 
 appendix <- read_docx()
-appendix <- body_add_par(appendix , "Forecasting data analysis for Kenya recipient experiment", style = "heading 1")
+appendix <- body_add_par(appendix , "Forecasting data analysis for Kenya recipient experiment (Study 2)", style = "heading 1")
 
 #########################
 ## Forecasting results ##
@@ -568,9 +568,9 @@ Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
 ## Histogram of video choice ##
 ###############################
 
-h <- ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop.., stat="count")) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("Number of business videos chosen") + scale_y_continuous(labels = scales::percent) + ggtitle("Histogram of video choice by condition")
+FigureS1 <- ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop..)) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("No. of business videos chosen") + scale_y_continuous(labels = scales::percent) + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) + theme_minimal()
 
-h + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) 
+save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_width = 8, dpi=300)
 
 ##################################
 ## Figures for synthetic pilots ##
