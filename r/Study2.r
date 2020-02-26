@@ -8,12 +8,14 @@
 
 set.seed(47269801)
 
-install.packages("pacman", repos='https://cloud.r-project.org/')
-library("pacman")
+if (!require("pacman")) {
+    install.packages("pacman", repos='https://cloud.r-project.org/')
+    library("pacman")
+}
 
 p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools", "ggpubr")
 
-source(here("r", "Funs.r"), echo = TRUE)
+source(here("r", "Funs.r"))
 
 load(here("data", "KenyaData.RData"))
 
@@ -24,7 +26,8 @@ attach(k1_df)
 ############################
 
 appendix <- read_docx()
-appendix <- body_add_par(appendix , "Forecasting data analysis for Kenya recipient experiment (study 2)", style = "heading 1")
+
+WriteHeading(appendix , "Forecasting data analysis for Kenya recipient experiment (study 2)")
 
 #########################
 ## Forecasting results ##
@@ -76,11 +79,12 @@ colnames(FR.tab) <- c("Hypothesis", "Coefficient", "Std. error", "p-value", "Ref
 
 ## Print table ##
 
-appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Forecasting results", style = "Normal") %>%
-    body_add_flextable(value = FTable(FR.tab, panels = 2, note = "Note: The dependent variable is the proportion selecting a business video for first video. Each of the 565 participants made three forecasts for a total of 565 x 3 = 1,695 observations. The first and second panels respectively exclude and include a dummy for own treatment assignment. The first column reports the mean difference between groups. The second column reports robust standard errors. The reference mean column lists the mean of the poverty alleviation condition for the first two hypotheses and the mean of the community empowerment condition for the third hypothesis."))
+LineBreak(appendix)
+WriteTitle(appendix, "Forecasting results")
 
-print(appendix, target = here("doc", "FC_appendix.docx"))
+appendix <- body_add_flextable(appendix, value = FTable(FR.tab, panels = 2, note = "Note: The dependent variable is the proportion selecting a business video for first video. Each of the 565 participants made three forecasts for a total of 565 x 3 = 1,695 observations. The first and second panels respectively exclude and include a dummy for own treatment assignment. The first column reports the mean difference between groups. The second column reports robust standard errors. The reference mean column lists the mean of the poverty alleviation condition for the first two hypotheses and the mean of the community empowerment condition for the third hypothesis."))
+
+print(appendix, target = here("doc", "S2_appendix.docx"))
 
 ################################
 ## Forecasting bar graph (2A) ##
@@ -219,7 +223,7 @@ forecast$eva.msg3<-forecast$eva.msg3/10
 minsize=30
 maxsize=150
 
-numsims <- 10
+numsims <- 10000
 
 #Experimental
 B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)

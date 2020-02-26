@@ -2,6 +2,10 @@
 # R Version: R-3.6.2
 # RStudio Version: 1.2.5033
 
+##############################
+## Estimation and inference ##
+##############################
+
 ## RegTest estimates a linear model and conducts statistical inference for linear combinations of coefficients ##
 
 RegTest <- function(equation, clustvars, hypotheses, data) {
@@ -146,6 +150,10 @@ scale.means = function (df, ..., na.rm=FALSE) {
     return(mean_vars)
 }
 
+########################
+## Tables and figures ##
+########################
+
 ## SumStats creates a table of summary statistics
 
 SumStats <- function(varlist, labels, data) {
@@ -172,14 +180,17 @@ SumStats <- function(varlist, labels, data) {
 
 ## FTable creates a FlexTable out of a results matrix
 
-FTable <- function(results, panels = 3, note) {
-
-    if (is.data.frame(results) == FALSE) {results <- as.data.frame(results)}
+FTable <- function(results, panels = 3, note = character(0)) {
     
-    boldix <- seq(from = 1, to = nrow(results), by = (nrow(results)) / panels)
+    rows <- nrow(results)
+    cols <- ncol(results)
+
+    boldix <- seq(from = 1, to = rows, by = rows / panels)
 
     big_border <- fp_border(width = 2)
     std_border <- fp_border(width = 1)
+
+    if (is.data.frame(results) == FALSE) {results <- as.data.frame(results)}
 
     flextable <- regulartable(results) %>%
 
@@ -195,14 +206,42 @@ FTable <- function(results, panels = 3, note) {
         bold(i = boldix, j = 1) %>%
 
         add_footer(Outcome = note) %>%
-        merge_at(j = 1:(ncol(results)), part = "footer") %>%
+        merge_at(j = 1:cols, part = "footer") %>%
 
-        width(j = 1, width = 2) %>%
-        width(j = seq(2, ncol(results), 1), width = 0.5) %>%
-        fontsize(size = 9, part = "all")
+        flextable::font(fontname = "Times New Roman", part = "all") %>%
+        italic(part = "footer") %>%
+        fontsize(size = 10, part = "all") %>%
+
+        width(j = 1, width = 1.6) %>%
+        width(j = seq(2, cols - 1, 1), width = 0.8) %>%
+        width(j = cols, width = 0.6)
 
     return(flextable)
 
+}
+
+WriteHeading <- function(file, text) {
+
+    text_style <- fp_text(color = "black", font.size = 16, font.family = "Times New Roman", vertical.align = "baseline", shading.color = "transparent")
+
+    par_style <- fp_par(text.align = "justify")
+
+    file <- body_add_fpar(file, fpar(ftext(text, prop = text_style), fp_p = par_style))
+
+}
+
+WriteTitle <- function(file, text) {
+
+    text_style <- fp_text(color = "black", font.size = 12, bold = FALSE, italic = FALSE, underlined = FALSE, font.family = "Times New Roman", vertical.align = "baseline", shading.color = "transparent")
+
+    par_style <- fp_par(text.align = "justify")
+
+    file <- body_add_fpar(file, fpar(ftext(text, prop = text_style), fp_p = par_style))
+
+}
+
+LineBreak <- function(file) {
+    file <- body_add_par(file , " ", style = "Normal")
 }
 
 BarChart <- function(depvar, groupvar, data, title, ytitle, xtitle, fillcolor, bounds, tick) {
