@@ -249,7 +249,8 @@ k1_df$soc.age.c <- scale(k1_df$soc.age, scale = FALSE)
 k1_df$ses.unemp.c <- scale(k1_df$ses.unemp, scale = FALSE)
 k1_df$soc.sav.c <- scale(k1_df$soc.sav, scale = FALSE)
 
-write.csv(k1_df, file = here("data", "K1_Clean_Data.csv"), na = "")
+save(k1_df, tidy.codes.sum, file = here("data", "KenyaData.RData"))
+
 attach(k1_df)
 
 ############################
@@ -302,7 +303,7 @@ for (i in 1:3) {
     for (depvar in depvars) {
 
         eqn <- paste(depvar, "~ treat", sep = " ")
-        RES.bal <- rbind(RES.bal, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10000, data = k1_df))
+        RES.bal <- rbind(RES.bal, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10, data = k1_df))
 
     }
 
@@ -360,7 +361,7 @@ for (i in 1:3) {
         predicted <- predict(lm(firststage, data = k1_df, na.action = na.omit))
 
         secondstage <- paste("predicted", "~ treat", sep = " ")
-        RES.eq <- rbind(RES.eq, PermTest(secondstage, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df[complete.cases(soc.fem, soc.age, soc.pri, ses.unemp), "survey.id"], hypotheses = hypotheses[i], iterations = 10000, data = k1_df[complete.cases(soc.fem, soc.age, soc.pri, ses.unemp), ]))
+        RES.eq <- rbind(RES.eq, PermTest(secondstage, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df[complete.cases(soc.fem, soc.age, soc.pri, ses.unemp), "survey.id"], hypotheses = hypotheses[i], iterations = 10, data = k1_df[complete.cases(soc.fem, soc.age, soc.pri, ses.unemp), ]))
 
     }
 
@@ -415,7 +416,7 @@ for (i in 1:3) {
     for (depvar in depvars) {
 
         eqn <- paste(depvar, "~ treat", sep = " ")
-        RES.pri <- rbind(RES.pri, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10000, data = k1_df))
+        RES.pri <- rbind(RES.pri, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10, data = k1_df))
 
     }
 
@@ -470,7 +471,7 @@ for (i in 1:3) {
     for (depvar in depvars) {
 
         eqn <- paste(depvar, "~ treat", sep = " ")
-        RES.sec <- rbind(RES.sec, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10000, data = k1_df))
+        RES.sec <- rbind(RES.sec, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10, data = k1_df))
 
     }
 
@@ -527,7 +528,7 @@ for (i in 1:3) {
     for (depvar in depvars) {
 
         eqn <- paste(depvar, "~", Interact("treat", covariates), sep = " ")
-        RES.pri.cov <- rbind(RES.pri.cov, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10000, data = k1_df))
+        RES.pri.cov <- rbind(RES.pri.cov, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10, data = k1_df))
 
     }
 
@@ -583,7 +584,7 @@ for (i in 1:3) {
     for (depvar in depvars) {
 
         eqn <- paste(depvar, "~", Interact("treat", covariates), sep = " ")
-        RES.sec.cov <- rbind(RES.sec.cov, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10000, data = k1_df))
+        RES.sec.cov <- rbind(RES.sec.cov, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[i], iterations = 10, data = k1_df))
 
     }
 
@@ -645,7 +646,7 @@ for (i in 1:2) {
         for (depvar in depvars) {
 
             eqn <- paste(depvar, " ~ treat*", hetvars[i], sep = "")
-            RES.pri.het <- rbind(RES.pri.het, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[j], iterations = 10000, data = k1_df))
+            RES.pri.het <- rbind(RES.pri.het, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[j], iterations = 10, data = k1_df))
 
         }
 
@@ -706,7 +707,7 @@ for (i in 1:2) {
         for (depvar in depvars) {
 
             eqn <- paste(depvar, " ~ treat*", hetvars[i], sep = "")
-            RES.sec.het <- rbind(RES.sec.het, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[j], iterations = 10000, data = k1_df))
+            RES.sec.het <- rbind(RES.sec.het, PermTest(eqn, treatvars = c("treat", "pov", "ind", "com"), clustvars = k1_df$survey.id, hypotheses = hypotheses[j], iterations = 10, data = k1_df))
 
         }
 
