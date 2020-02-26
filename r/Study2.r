@@ -11,7 +11,7 @@ set.seed(47269801)
 install.packages("pacman", repos='https://cloud.r-project.org/')
 library("pacman")
 
-p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools")
+p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools", "ggpubr")
 
 source(here("r", "Funs.r"), echo = TRUE)
 
@@ -140,12 +140,6 @@ save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_widt
 ##################################
 ## Figures for synthetic pilots ##
 ##################################
-
-# Load data ####################################################################
-
-  # load("data/k1_df.rda")
-
-################################################################################
 
 # Random sample function #######################################################
 
@@ -286,22 +280,22 @@ names(MeanERR)<-c("B1_Exp_MeanError","B2_Exp_MeanError","B1_FOR_MeanError","B2_F
 
 df2c <- melt(MeanERR, id = "N")
 
-  #Figure2B: Negative absolute error
+#Figure2B: Negative absolute error
 
 Figure2B <- ggplot(df2c, aes(x = N, y = value, color = variable)) +
     geom_smooth(size = 0.8, se = FALSE, aes(linetype = variable)) +
     scale_linetype_manual(values = c("solid","solid", "dashed", "dashed"), name="Coefficients (Ref: Poverty Alleviation)",
-                          labels=c("A/B pilot: Ind. Empowerment",
-                                   "A/B pilot: Com. Empowerment",
+                          labels=c("Sim. pilot: Ind. Empowerment",
+                                   "Sim. pilot: Com. Empowerment",
                                    "Forecasting: Ind. Empowerment",
                                    "Forecasting: Com. Empowerment")) +
     scale_color_manual(values=c('#7ca6c0', '#c05746','#7ca6c0', '#c05746'),
                        name="Coefficients (Ref: Poverty Alleviation)",
-                       labels=c("A/B pilot: Ind. Empowerment",
-                                "A/B pilot: Com. Empowerment",
+                       labels=c("Sim. pilot: Ind. Empowerment",
+                                "Sim. pilot: Com. Empowerment",
                                 "Forecasting: Ind. Empowerment",
                                 "Forecasting: Com. Empowerment")) +
-    ggtitle("B. Accuracy of forecasts versus A/B pilots") +
+    ggtitle("B. Accuracy of forecasts versus simulated experimental pilots") +
     xlab("Bootstrap sample size across all groups") +
     ylab("Prediction accuracy (negative absolute error)") +
     scale_x_continuous(breaks=seq(25, 150, 25)) +
@@ -384,101 +378,75 @@ DenDat<-bind_rows(B1_EXP_DF_T,B2_EXP_DF_T,B1_FOR_DF_T,B2_FOR_DF_T%>%as.data.fram
   DenDatN150B2 <-DenDat[ which(DenDat$time=='N150'
                                & (DenDat$VAR=='B2_EXP' | DenDat$VAR=='B2_FOR')  ), ]
  
-####
+#Generate figure S2
+FigTheme <- function ()
+{
+ theme(panel.grid.major = element_blank(),
+       panel.grid.minor = element_blank(),
+       panel.background = element_blank(),
+       axis.line = element_line(colour = "black"),
+       axis.text.x = element_text(size = 11),
+       plot.title = element_text(size=11, face="bold"),
+       text = element_text(size=11),
+       legend.position = "none")
+}
 
 #B1
-  PanelA <- ggplot(DenDatN50B1,
-       aes(COEF, fill = as.factor(VAR))) +
-       geom_vline(xintercept = 0.06970, size=.9)+
-       ggtitle("N=50") +
-  ylab("") +
-  theme_classic(base_size = 12) +
-  scale_x_continuous(limits=c(-.6, .6),name='') +
-  coord_cartesian(ylim=c(0,20)) +
-  geom_density(alpha = 1/4) +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black"),
-        plot.title = element_text(size=12, face="bold", hjust=-0.5),
-        legend.position = "none")
- 
- 
-  PanelC <- ggplot(DenDatN100B1,
-         aes(COEF, fill = as.factor(VAR))) +
-    geom_vline(xintercept = 0.06970, size=.9)+
-    ggtitle("N=100") +
-    ylab("") +
-    theme_classic(base_size = 12) +
-    scale_x_continuous(limits=c(-.6, .6),name='') +
-    coord_cartesian(ylim=c(0,20)) +
-    geom_density(alpha = 1/4) +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "black"),
-          plot.title = element_text(size=12, face="bold", hjust=-0.5),
-          legend.position = "none")
- 
-  PanelE <- ggplot(DenDatN150B1,
-         aes(COEF, fill = as.factor(VAR))) +
-    geom_vline(xintercept = 0.06970, size=.9)+
-    ggtitle("N=150") +
-    ylab("") +
-    theme_classic(base_size = 12) +
-    scale_x_continuous(limits=c(-.6, .6),name='') +
-    coord_cartesian(ylim=c(0,20)) +
-    geom_density(alpha = 1/4) +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "black"),
-          plot.title = element_text(size=12, face="bold", hjust=-0.5),
-          legend.position = "none")
- 
-#B2
- 
-  PanelB <- ggplot(DenDatN50B2,
-         aes(COEF, fill = as.factor(VAR))) +
-    geom_vline(xintercept = 0.12916, size=.9)+
-    ylab("") +
-    theme_classic(base_size = 12) +
-    scale_x_continuous(limits=c(-.6, .6),name='') +
-    coord_cartesian(ylim=c(0,20)) +
-    geom_density(alpha = 1/4) +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "black"),
-          legend.position = "none")
- 
-  PanelD <- ggplot(DenDatN100B2,
-         aes(COEF, fill = as.factor(VAR))) +
-    geom_vline(xintercept = 0.12916, size=.9)+
-    ylab("") +
-    theme_classic(base_size = 12) +
-    scale_x_continuous(limits=c(-.6, .6),name='') +
-    coord_cartesian(ylim=c(0,20)) +
-    geom_density(alpha = 1/4) +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "black"),
-          legend.position = "none")
- 
-  PanelF <- ggplot(DenDatN150B2,
-         aes(COEF, fill = as.factor(VAR))) +
-    geom_vline(xintercept = 0.12916, size=.9)+
-    ylab("") +
-    theme_classic(base_size = 12) +
-    scale_x_continuous(limits=c(-.6, .6),name='') +
-    coord_cartesian(ylim=c(0,20)) +
-    geom_density(alpha = 1/4) +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "black"),
-          legend.position = "none")
 
-FigureS2 <- plot_grid(PanelA, PanelB, PanelC, PanelD, PanelE, PanelF, nrow = 3, ncol = 2, labels = c("Individual Empowerment", "Community Empowerment"), scale = 0.8, hjust = -0.2, align="hv")
+PanelA <- ggplot(DenDatN50B1,
+                aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.06970, size=.9)+
+ labs(subtitle="N=50") +
+ ylab("")+xlab("") +xlim(-.6,.6)+
+ coord_cartesian(ylim = c(0, 20))+
+ geom_density(alpha = 1/4) + FigTheme()
+
+PanelC <- ggplot(DenDatN100B1,
+                aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.06970, size=.9)+
+ labs(subtitle="N=100") +
+ ylab("")+xlab("") +xlim(-.6,.6)+ coord_cartesian(ylim = c(0, 20))+
+ geom_density(alpha = 1/4) + FigTheme()
+
+PanelE <- ggplot(DenDatN150B1,
+                aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.06970, size=.9)+
+ labs(subtitle="N=150") +
+ ylab("")+xlab("Individual Empowerment coefs.")+xlim(-.6,.6)+
+ coord_cartesian(ylim = c(0, 20))+
+ geom_density(alpha = 1/4) + FigTheme()
+
+#B2
+
+PanelB <- ggplot(DenDatN50B2,
+                aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.12916, size=.9)+
+ ylab("")+xlab("") +xlim(-.6,.6)+
+ coord_cartesian(ylim = c(0, 20))+  
+ labs(subtitle="") +
+ geom_density(alpha = 1/4) + FigTheme()
+
+PanelD <- ggplot(DenDatN100B2,
+                aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.12916, size=.9)+
+ ylab("")+xlab("") +xlim(-.6,.6)+
+ coord_cartesian(ylim = c(0, 20))+  
+ labs(subtitle="") +
+ geom_density(alpha = 1/4) + FigTheme()
+
+PanelF <- ggplot(DenDatN150B2,
+                aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.12916, size=.9)+
+ ylab("")+xlab("Community Empowerment coefs.") +xlim(-.6,.6)+
+ coord_cartesian(ylim = c(0, 20))+  
+ labs(subtitle="") +
+ geom_density(alpha = 1/4) + FigTheme()
+
+FigureS2<-plot_grid(ggarrange(PanelA,
+                   PanelC,
+                   PanelE,ncol=1),
+         ggarrange(PanelB,
+                   PanelD,
+                   PanelF,ncol=1))
+
 save_plot(here("graphics", "FigureS2.png"), FigureS2, base_height = 9, base_width = 6, dpi=300)
