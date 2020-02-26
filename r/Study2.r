@@ -99,6 +99,8 @@ colnames(for.stats) <- c("type", "treat", "mean", "SE")
 
 attach(k1_df)
 
+treat <- factor(treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+
 exp.stats <- k1_df[complete.cases(vid.imp1), ] %>% group_by(treat) %>% summarise(mean = mean(vid.imp1), sd = sd(vid.imp1), obs = length(vid.imp1))
 exp.stats <- cbind(as.data.frame(c("Experimental results", "Experimental results", "Experimental results")), as.data.frame(table(treat))[, 1], as.data.frame(exp.stats[, 2]), as.data.frame(exp.stats[, 3] / sqrt(exp.stats[, 4])))
 colnames(exp.stats) <- c("type", "treat", "mean", "SE")
