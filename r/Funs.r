@@ -178,7 +178,10 @@ FTable <- function(results, panels = 3, note) {
     
     boldix <- seq(from = 1, to = nrow(results), by = (nrow(results)) / panels)
 
-    ftable <- regulartable(results) %>%
+    big_border <- fp_border(width = 2)
+    std_border <- fp_border(width = 1)
+
+    flextable <- regulartable(results) %>%
 
         align(align = "center") %>%
         align(j = 1, part = "body", align = "left") %>%
@@ -187,7 +190,7 @@ FTable <- function(results, panels = 3, note) {
         hline_top(part = "all", border = big_border) %>%
         hline_top(part = "body", border = big_border) %>%
         hline_bottom(part = "body", border = big_border) %>%
-        border(i = boldix[-1], border.top = std_border) %>%
+        hline(i = boldix[-1] - 1, border = std_border) %>%
 
         bold(i = boldix, j = 1) %>%
 
@@ -198,7 +201,7 @@ FTable <- function(results, panels = 3, note) {
         width(j = seq(2, ncol(results), 1), width = 0.5) %>%
         fontsize(size = 9, part = "all")
 
-    return(ftable)
+    return(flextable)
 
 }
 

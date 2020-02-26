@@ -23,9 +23,6 @@ attach(k1_df)
 ## Initialize results doc ##
 ############################
 
-big_border = fp_border(width = 2)
-std_border = fp_border(width = 1)
-
 appendix <- read_docx()
 appendix <- body_add_par(appendix , "Pre-specified data analysis for Kenya recipient experiment (study 1)", style = "heading 1")
 
@@ -36,6 +33,9 @@ appendix <- body_add_par(appendix , "Pre-specified data analysis for Kenya recip
 SumTable <- SumStats(varlist = c("soc.fem", "soc.pri", "soc.age", "ses.unemp", "soc.sav", "soc.con", "soc.inc"), labels = c("Female", "Completed std. 8", "Age", "Unemployed", "Holds savings", "Consumption (Ksh.)", "Income (Ksh.)"), data = k1_df)
 
 ## Print table to doc ##
+
+big_border <- fp_border(width = 2)
+std_border <- fp_border(width = 1)
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
     body_add_par("Summary of sample sociodemographic characteristics for study 1", style = "Normal")

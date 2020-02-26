@@ -23,9 +23,6 @@ attach(u1_df)
 ## Initialize results doc ##
 ############################
 
-big_border = fp_border(width = 2)
-std_border = fp_border(width = 1)
-
 appendix <- read_docx()
 appendix <- body_add_par(appendix , "Pre-specified data analysis for US donor experiment (study 3)", style = "heading 1")
 
@@ -36,6 +33,9 @@ appendix <- body_add_par(appendix , "Pre-specified data analysis for US donor ex
 SumTable <- SumStats(varlist = c("priordonor", "age", "gen.fem", "income", "hhsize", "edu.self.ba", "edu.par.ba", "race.minor", "religiosity", "is.chr", "is.dem"), labels = c("Prior donor", "Age", "Female", "Annual income (USD)", "HH size", "College educated", "Social class", "Racial minority", "Religiosity", "Christian", "Democrat"), data = u1_df)
 
 ## Print table to doc ##
+
+big_border <- fp_border(width = 2)
+std_border <- fp_border(width = 1)
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
     body_add_par("Summary of sample sociodemographic characteristics for study 3", style = "Normal")
