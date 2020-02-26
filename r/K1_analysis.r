@@ -464,7 +464,7 @@ big_border = fp_border(width = 2)
 std_border = fp_border(width = 1)
 
 appendix <- read_docx()
-appendix <- body_add_par(appendix , "Pre-specified data analysis for Kenya recipient experiment (Study 1)", style = "heading 1")
+appendix <- body_add_par(appendix , "Pre-specified data analysis for Kenya recipient experiment (study 1)", style = "heading 1")
 
 ########################
 ## Summary statistics ##
@@ -475,7 +475,7 @@ SumStats <- SumStats(varlist = c("soc.fem", "soc.pri", "soc.age", "ses.unemp", "
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Summary of sample sociodemographic characteristics", style = "Normal")
+    body_add_par("Summary of sample sociodemographic characteristics for study 1", style = "Normal")
 
 ftable <- regulartable(as.data.frame(SumStats)) %>%
     align(align = "center") %>%
@@ -540,7 +540,7 @@ colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Randomization balance checks on subject demographic characteristics", style = "Normal") %>%
+    body_add_par("Balance checks on subject demographic characteristics for study 1", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: Each panel corresponds to a single hypothesis for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
 ###########################################
@@ -598,7 +598,7 @@ colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Equivalence tests on primary outcomes", style = "Normal") %>%
+    body_add_par("Equivalence tests on primary outcomes for study 1", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: This table computes predicted values of outcomes as a function of baseline covariates and regresses the predictions on the treatment indicators. Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of predicted outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
 ####################################
@@ -653,7 +653,7 @@ colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Treatment effects on primary outcomes", style = "Normal") %>%
+    body_add_par("Treatment effects on primary outcomes for study 1", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
 ######################################
@@ -708,7 +708,7 @@ colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Treatment effects on secondary outcomes", style = "Normal") %>%
+    body_add_par("Treatment effects on secondary outcomes for study 1", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
 
@@ -765,7 +765,7 @@ colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Treatment effects on primary outcomes with covariate adjustment", style = "Normal") %>%
+    body_add_par("Treatment effects on primary outcomes with covariate adjustment for study 1", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: We include as control variables indicators for being female, for having completed primary schooling, above median age, and unemployment status. Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
 #################################################
@@ -821,7 +821,7 @@ colnames(RES.print)[c(1:9)] <- colnames(RES.print)[c(1, 2, 3, 4, 5, 7, 8, 9, 6)]
 ## Print table to doc ##
 
 appendix <- body_add_par(appendix , " ", style = "Normal") %>%
-    body_add_par("Treatment effects on secondary outcomes with covariate adjustment", style = "Normal") %>%
+    body_add_par("Treatment effects on secondary outcomes with covariate adjustment for study 1", style = "Normal") %>%
     body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:9)], note = "Note: We include as control variables indicators for being female, for having completed primary schooling, above median age, and unemployment status. Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference. The fifth column reports the minimum q-values. FDR correction is applied over all outcomes within a hypothesis. The reference mean column lists the mean of the poverty alleviation condition for the first two panels and the mean of the community empowerment condition for the third panel."))
 
 ################################################
@@ -880,7 +880,7 @@ for (i in 1:2) {
 
     appendix <- body_add_par(appendix , " ", style = "Normal") %>%
 
-        body_add_par(paste("Heterogeneous treatment effects on primary outcomes by", hetvarnames[i]), style = "Normal") %>%
+        body_add_par(paste("Heterogeneous treatment effects on primary outcomes by", hetvarnames[i], "for study 1"), style = "Normal") %>%
         body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:7)], note = "Note: This table reports coefficient estimates on each experimental comparison interacted with a baseline variable. Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference."))
 
 }
@@ -941,7 +941,7 @@ for (i in 1:2) {
 
     appendix <- body_add_par(appendix , " ", style = "Normal") %>%
 
-        body_add_par(paste("Heterogeneous treatment effects on secondary outcomes by", hetvarnames[i]), style = "Normal") %>%
+        body_add_par(paste("Heterogeneous treatment effects on secondary outcomes by", hetvarnames[i], "for study 1"), style = "Normal") %>%
         body_add_flextable(value = FTable(RES.print[2:nrow(RES.print), c(1:2,4:7)], note = "Note: This table reports coefficient estimates on each experimental comparison interacted with a baseline variable. Each panel corresponds to a single hypothesis comparing the treatment conditions for the group of outcome variables. The first column reports the mean difference between groups. The second column reports robust standard errors. The third column reports standard p-values. The fourth column reports exact p-values from randomization inference."))
 
 }

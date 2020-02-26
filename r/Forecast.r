@@ -464,7 +464,7 @@ big_border = fp_border(width = 2)
 std_border = fp_border(width = 1)
 
 appendix <- read_docx()
-appendix <- body_add_par(appendix , "Forecasting data analysis for Kenya recipient experiment (Study 2)", style = "heading 1")
+appendix <- body_add_par(appendix , "Forecasting data analysis for Kenya recipient experiment (study 2)", style = "heading 1")
 
 #########################
 ## Forecasting results ##
