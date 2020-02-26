@@ -2,6 +2,19 @@
 # R Version: R-3.6.2
 # RStudio Version: 1.2.5033
 
+###############################
+## Install required packages ##
+###############################
+
+set.seed(47269801)
+
+install.packages("pacman", repos='https://cloud.r-project.org/')
+library("pacman")
+
+p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools")
+
+source(here("r", "Funs.r"), echo = TRUE)
+
 ################
 ## Clean data ##
 ################

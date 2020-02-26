@@ -2,21 +2,6 @@
 # R Version: R-3.6.2
 # RStudio Version: 1.2.5033
 
-###############################
-## Install required packages ##
-###############################
-
-set.seed(47269801)
-
-install.packages("pacman", repos='https://cloud.r-project.org/')
-library("pacman")
-
-p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools")
-
-######################
-## Define functions ##
-######################
-
 ## RegTest estimates a linear model and conducts statistical inference for linear combinations of coefficients ##
 
 RegTest <- function(equation, clustvars, hypotheses, data) {
@@ -246,11 +231,3 @@ BarChart <- function(depvar, groupvar, data, title, ytitle, xtitle, fillcolor, b
     return(Graph)
 
 }
-
-#############
-## Program ##
-#############
-
-source(here("r", "K1.r"), echo = TRUE)
-source(here("r", "Forecast.r"), echo = TRUE)
-source(here("r", "U1.r"), echo = TRUE)
