@@ -100,10 +100,10 @@ colnames(for.stats) <- c("type", "treat", "mean", "SE")
 
 attach(k1_df)
 
-treat <- factor(treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+k1_df$treat.long <- factor(treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
 
-exp.stats <- k1_df[complete.cases(vid.imp1), ] %>% group_by(treat) %>% summarise(mean = mean(vid.imp1), sd = sd(vid.imp1), obs = length(vid.imp1))
-exp.stats <- cbind(as.data.frame(c("Experimental results", "Experimental results", "Experimental results")), as.data.frame(table(treat))[, 1], as.data.frame(exp.stats[, 2]), as.data.frame(exp.stats[, 3] / sqrt(exp.stats[, 4])))
+exp.stats <- k1_df[complete.cases(vid.imp1), ] %>% group_by(k1_df$treat.long) %>% summarise(mean = mean(vid.imp1), sd = sd(vid.imp1), obs = length(vid.imp1))
+exp.stats <- cbind(as.data.frame(c("Experimental results", "Experimental results", "Experimental results")), as.data.frame(table(k1_df$treat.long))[, 1], as.data.frame(exp.stats[, 2]), as.data.frame(exp.stats[, 3] / sqrt(exp.stats[, 4])))
 colnames(exp.stats) <- c("type", "treat", "mean", "SE")
 
 Fig2aData <- rbind(exp.stats, for.stats)
@@ -223,7 +223,7 @@ forecast$eva.msg3<-forecast$eva.msg3/10
 minsize=30
 maxsize=150
 
-numsims <- 10000
+numsims <- 100
 
 #Experimental
 B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
