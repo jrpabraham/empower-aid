@@ -142,73 +142,52 @@ save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_widt
 ## Figures for synthetic pilots ##
 ##################################
 
-# Random sample function #######################################################
+## User-defined functions ##
 
-  randomSample = function(df,n) {
-         return (df[sample(nrow(df), n),])
-    }
+RandomSample <- function(df, n, by) {
+    
+    sampledby <- sample(unique(by), n)
+    resample <- df[(by %in% sampledby), ]
+    return(resample)
 
-################################################################################
+}
 
-# For experimental results #####################################################
-  simulatorEXP <- function(df, n_sims, sample_n) {
+OneSim <- function(df, n, by, depvar, treatvar) {
 
-  OneSim<-function(df, sample_n){
+    resample <- RandomSample(df, n, by)
 
-     smallerDF<-randomSample(df, sample_n)
+    eqn <- substitute(depvar ~ as.factor(treatvar), list(depvar = as.name(depvar), treatvar = as.name(treatvar)))
 
-     ATEs<-summary(lm(vid.imp1~as.factor(treat), data=smallerDF))$coefficient[2:3,c(1,4)] %>%
-       as.vector %>% matrix(ncol = 4) %>% data.frame()
+    model <- summary(lm(eqn, data = resample))$coefficient
 
-     return(ATEs)
-     names(ATEs) <- c("A","B","Ap","Bp")
+    if (nrow(model) == 3) {
 
-  }
+      stats <- model[2:3, c(1, 4)] %>%
+          as.vector %>%
+          matrix(ncol = 4) %>%
+          data.frame()
 
-    # Run sim n_sims times with given parameters
-     sims_dt <- lapply(
-      X = 1:n_sims,
-      FUN = function(i) OneSim(df, sample_n)) %>%
-       bind_rows()
+    } else {
 
-    # Return sim_dt
-    return(sims_dt)
-
-     }
-
-################################################################################
-
-# For forecasting results######################################################
-
-  simulatorFOR <- function(df, n_sims, sample_n) {
-
-    OneSimFOR<-function(df, sample_n){
-
-      smallerDF<-randomSample(df, sample_n)
-
-      smallerDF.forecast.long <- smallerDF %>% gather(WhichTreat, pred, eva.msg1, eva.msg2, eva.msg3)
-
-      ATEs<-summary(lm(pred~as.factor(WhichTreat),
-                       data=smallerDF.forecast.long))$coefficient[2:3,c(1,4)] %>%
-        as.vector %>%
-        matrix(ncol = 4) %>%
-        data.frame()
-
-      return(ATEs)
-      names(ATEs) <- c("A","B","Ap","Bp")
+        # Default behavior in rare cases is to return an empty object
+        stats <- data.frame(matrix(ncol = 4))
 
     }
 
-    # Run n_sims times with given parameters
-    sims_dt <- lapply(
-      X = 1:n_sims,
-      FUN = function(i) OneSimFOR(df, sample_n)) %>%
-      bind_rows()
+    names(stats) <- c("A","B","Ap","Bp")
+    return(stats)
 
-    # Return sim_dt
+}
+
+Simulator <- function(df, iterations, n, by, depvar, treatvar) {
+
+    # i simulations of a bootstrap of n obs.
+
+    sims_dt <- lapply(X = 1:iterations, FUN = function(i) OneSim(df, n, by, depvar, treatvar)) %>% bind_rows()
+
     return(sims_dt)
 
-  }
+}
 
 ################################################################################
 
@@ -223,7 +202,7 @@ forecast$eva.msg3<-forecast$eva.msg3/10
 minsize=30
 maxsize=150
 
-numsims <- 100
+numsims <- 10000
 
 #Experimental
 B1_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
@@ -232,7 +211,7 @@ B1p_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
 B2p_EXP <- matrix(nrow=(maxsize-minsize), ncol=1)
 
 for(i in minsize:maxsize){
-    TEMP <- simulatorEXP(k1_df, numsims, i)
+    TEMP <- Simulator(k1_df, iterations = numsims, n = i, by = k1_df$survey.id, "vid.imp1", "treat")
     B1_EXP[i-(minsize-1)]<-as.vector(TEMP[1])
     B2_EXP[i-(minsize-1)]<-TEMP[2]
     B1p_EXP[i-(minsize-1)]<-TEMP[3]
@@ -250,7 +229,7 @@ B2_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
 B1p_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
 B2p_FOR <- matrix(nrow=(maxsize-minsize), ncol=1)
 for(i in minsize:maxsize){
-TEMP <- simulatorFOR(forecast, numsims, i)
+TEMP <- Simulator(forecast.long, iterations = numsims, n = i, by = forecast.long$survey.id, "pred", "WhichTreat")
 B1_FOR[i-(minsize-1)]<-TEMP[1]
 B2_FOR[i-(minsize-1)]<-TEMP[2]
 B1p_FOR[i-(minsize-1)]<-TEMP[3]
