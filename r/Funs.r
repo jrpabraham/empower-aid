@@ -150,6 +150,55 @@ scale.means = function (df, ..., na.rm=FALSE) {
     return(mean_vars)
 }
 
+################
+## Simulation ##
+################
+
+RandomSample <- function(df, n, by) {
+    
+    sampledby <- sample(unique(by), n)
+    resample <- df[(by %in% sampledby), ]
+    return(resample)
+
+}
+
+OneSim <- function(df, n, by, depvar, treatvar) {
+
+    resample <- RandomSample(df, n, by)
+
+    eqn <- substitute(depvar ~ as.factor(treatvar), list(depvar = as.name(depvar), treatvar = as.name(treatvar)))
+
+    model <- summary(lm(eqn, data = resample))$coefficient
+
+    if (nrow(model) == 3) {
+
+      stats <- model[2:3, c(1, 4)] %>%
+          as.vector %>%
+          matrix(ncol = 4) %>%
+          data.frame()
+
+    } else {
+
+        # Default behavior in rare cases is to return an empty object
+        stats <- data.frame(matrix(ncol = 4))
+
+    }
+
+    names(stats) <- c("A","B","Ap","Bp")
+    return(stats)
+
+}
+
+Simulator <- function(df, iterations, n, by, depvar, treatvar) {
+
+    # i simulations of a bootstrap of n obs.
+
+    sims_dt <- lapply(X = 1:iterations, FUN = function(i) OneSim(df, n, by, depvar, treatvar)) %>% bind_rows()
+
+    return(sims_dt)
+
+}
+
 ########################
 ## Tables and figures ##
 ########################

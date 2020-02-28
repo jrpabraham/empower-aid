@@ -21,21 +21,12 @@ load(here("data", "KenyaData.RData"))
 
 attach(k1_df)
 
-############################
-## Initialize results doc ##
-############################
-
-appendix <- read_docx()
-
-WriteHeading(appendix , "Forecasting data analysis for Kenya recipient experiment (study 2)")
-
-#########################
-## Forecasting results ##
-#########################
-
-#k1_df is the name of the dataframe
+################################
+## Create forecasting dataset ##
+################################
 
 k1_df$vid.imp1 <- k1_df$vid.dec1 %in% c(3, 5)
+
 forecast <-subset(k1_df, select = c(vid.imp1, eva.msg1, eva.msg2, eva.msg3,treat,pov,ind,com,eva.conf, survey.id))
 
 #Recoding into proportion selecting a business video for first video
@@ -50,10 +41,14 @@ forecast.long <- forecast %>% gather(WhichTreat, pred, eva.m1_rec, eva.m1_rec,ev
 
 #Dummies for own condition
 
-forecast.long$Own<-0
-forecast.long$Own[forecast.long$WhichTreat == "eva.m1_rec" & forecast.long$pov == 1] <- 1 
-forecast.long$Own[forecast.long$WhichTreat == "eva.m2_rec" & forecast.long$ind == 1] <- 1 
+forecast.long$Own <- 0
+forecast.long$Own[forecast.long$WhichTreat == "eva.m1_rec" & forecast.long$pov == 1] <- 1
+forecast.long$Own[forecast.long$WhichTreat == "eva.m2_rec" & forecast.long$ind == 1] <- 1
 forecast.long$Own[forecast.long$WhichTreat == "eva.m3_rec" & forecast.long$com == 1] <- 1
+
+############################
+## Forecasting regression ##
+############################
 
 refmeans <- c(mean(forecast.long[which(forecast.long$WhichTreat == "eva.m1_rec"), "pred"]), mean(forecast.long[which(forecast.long$WhichTreat == "eva.m1_rec"), "pred"]), mean(forecast.long[which(forecast.long$WhichTreat == "eva.m3_rec"), "pred"]))
 
@@ -79,6 +74,9 @@ colnames(FR.tab) <- c("Hypothesis", "Coefficient", "Std. error", "p-value", "Ref
 
 ## Print table ##
 
+appendix <- read_docx()
+
+WriteHeading(appendix , "Forecasting data analysis for Kenya recipient experiment (study 2)")
 LineBreak(appendix)
 WriteTitle(appendix, "Forecasting results")
 
@@ -134,64 +132,13 @@ Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
 ## Histogram of video choice ##
 ###############################
 
-FigureS1 <- ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop..)) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("No. of business videos chosen") + scale_y_continuous(labels = scales::percent) + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) + theme_minimal()
+FigureS1 <- ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop..)) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("No. of business videos chosen") + scale_y_continuous(labels = scales::percent) + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) + theme_bw()
 
 save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_width = 8, dpi=300)
 
 ##################################
 ## Figures for synthetic pilots ##
 ##################################
-
-## User-defined functions ##
-
-RandomSample <- function(df, n, by) {
-    
-    sampledby <- sample(unique(by), n)
-    resample <- df[(by %in% sampledby), ]
-    return(resample)
-
-}
-
-OneSim <- function(df, n, by, depvar, treatvar) {
-
-    resample <- RandomSample(df, n, by)
-
-    eqn <- substitute(depvar ~ as.factor(treatvar), list(depvar = as.name(depvar), treatvar = as.name(treatvar)))
-
-    model <- summary(lm(eqn, data = resample))$coefficient
-
-    if (nrow(model) == 3) {
-
-      stats <- model[2:3, c(1, 4)] %>%
-          as.vector %>%
-          matrix(ncol = 4) %>%
-          data.frame()
-
-    } else {
-
-        # Default behavior in rare cases is to return an empty object
-        stats <- data.frame(matrix(ncol = 4))
-
-    }
-
-    names(stats) <- c("A","B","Ap","Bp")
-    return(stats)
-
-}
-
-Simulator <- function(df, iterations, n, by, depvar, treatvar) {
-
-    # i simulations of a bootstrap of n obs.
-
-    sims_dt <- lapply(X = 1:iterations, FUN = function(i) OneSim(df, n, by, depvar, treatvar)) %>% bind_rows()
-
-    return(sims_dt)
-
-}
-
-################################################################################
-
-# Simulations ##################################################################
 
 #Recode forecasts:
 forecast$eva.msg1<-forecast$eva.msg1/10
