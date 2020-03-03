@@ -21,6 +21,54 @@ load(here("data", "KenyaData.RData"))
 
 attach(k1_df)
 
+##########################
+## Create psych indices ##
+##########################
+
+## Self-efficacy ##
+
+for (var in c(k1_df$sel.con, k1_df$sel.pers, k1_df$sel.com, k1_df$sel.prob, k1_df$sel.bett)) {
+
+    var[var < 0] <- NA
+
+}
+
+k1_df$sel.score.avg <- scale.means(k1_df, "sel.con", "sel.pers", "sel.com", "sel.prob", "sel.bett", na.rm = T)
+k1_df$sel.score <- scale(k1_df$sel.con) + scale(k1_df$sel.pers) + scale(k1_df$sel.com) + scale(k1_df$sel.prob) + scale(k1_df$sel.bett)
+k1_df$sel.score.z <- scale(k1_df$sel.score)
+
+## Stigma ##
+
+for (var in c(k1_df$jud.fam, k1_df$jud.com, k1_df$jud.judg, k1_df$jud.emb, k1_df$jud.ups)) {
+
+    var[var < 0] <- NA
+
+}
+
+k1_df$jud.fam.r <- 6 - k1_df$jud.fam
+k1_df$jud.com.r <- 6 - k1_df$jud.com
+
+k1_df$sti.score.avg <- scale.means(k1_df, "jud.fam.r", "jud.com.r", "jud.judg", "jud.emb", "jud.ups", na.rm = T)
+k1_df$sti.score <- scale(k1_df$jud.fam.r) + scale(k1_df$jud.com.r) + scale(k1_df$jud.judg) + scale(k1_df$jud.emb) + scale(k1_df$jud.ups)
+k1_df$sti.score.z <- scale(k1_df$sti.score)
+
+## Affect (5-point scale) ##
+
+for (var in c(k1_df$aff.pos, k1_df$aff.ash, k1_df$aff.pow, k1_df$aff.fina)) {
+
+    var[var < 0] <- NA
+
+}
+
+k1_df$aff.pos.s <- k1_df$aff.pos * (5/6)
+
+k1_df$aff.ash.r <- 6 - k1_df$aff.ash
+k1_df$aff.fina.r <- 6 - k1_df$aff.fina
+
+k1_df$aff.score.avg <- scale.means(k1_df, "aff.pos.s", "aff.pow", "aff.ash.r", "aff.fina.r", na.rm = T)
+k1_df$aff.score <- scale(k1_df$aff.pos) + scale(k1_df$aff.pow) + scale(k1_df$aff.ash.r) + scale(k1_df$aff.fina.r)
+k1_df$aff.score.z <- scale(k1_df$aff.score)
+
 ############################
 ## Initialize results doc ##
 ############################
@@ -528,34 +576,60 @@ print(appendix, target = here("doc", "S1_appendix.docx"))
 ## Stigma coding results ##
 ###########################
 
-# This is exploratory analysis on the stigma qualitative coding
+## Exploratory analysis on stigma free responses ##
+
+tidy.codes.2 <- k1_df %>%
+  dplyr::select(por.oth_1_RA_CODE, por.oth_2_RA_CODE, por.oth_3_RA_CODE,
+                ind.oth_1_RA_CODE, ind.oth_2_RA_CODE, ind.oth_3_RA_CODE,
+                com.oth_1_RA_CODE, com.oth_2_RA_CODE, com.oth_3_RA_CODE,
+                condition.order, survey.id) %>%
+  dplyr::mutate_at(vars(matches("oth")),funs(as.factor)) %>%
+  rename(oth.1_por = por.oth_1_RA_CODE, oth.2_por = por.oth_2_RA_CODE, oth.3_por = por.oth_3_RA_CODE,
+         oth.1_ind = ind.oth_1_RA_CODE, oth.2_ind = ind.oth_2_RA_CODE, oth.3_ind = ind.oth_3_RA_CODE,
+         oth.1_com = com.oth_1_RA_CODE, oth.2_com = com.oth_2_RA_CODE, oth.3_com = com.oth_3_RA_CODE) 
+
+tidy.codes.2$oth.1 <- coalesce(tidy.codes.2$oth.1_por, tidy.codes.2$oth.1_ind, tidy.codes.2$oth.1_com) 
+tidy.codes.2$oth.2 <- coalesce(tidy.codes.2$oth.2_por, tidy.codes.2$oth.2_ind, tidy.codes.2$oth.2_com) 
+tidy.codes.2$oth.3 <- coalesce(tidy.codes.2$oth.3_por, tidy.codes.2$oth.3_ind, tidy.codes.2$oth.3_com) 
+
+tidy.codes.3 <- tidy.codes.2 %>%
+  dplyr::select(oth.1, oth.2, oth.3, condition.order, survey.id) %>% 
+  gather(contains('oth'), key=prompt, value=oth.value)
+
+tidy.codes.3$oth.neg <- as.logical(tidy.codes.3$oth.value == "negative") 
+tidy.codes.3$oth.pos <- as.logical(tidy.codes.3$oth.value == "positive") 
+
+tidy.codes.sum <- tidy.codes.3 %>%
+  group_by(survey.id) %>%
+  mutate(neg.prop = sum(oth.value=="negative", na.rm=T) / length(which(!is.na(oth.value)))) %>%
+  mutate(pos.prop = sum(oth.value=="positive", na.rm=T) / length(which(!is.na(oth.value)))) %>%
+  mutate(amb.prop = sum(oth.value=="ambig", na.rm=T) / length(which(!is.na(oth.value)))) 
 
 ms.oth.neg.prop <- tidy.codes.sum %>% 
    group_by(condition.order) %>% 
    summarise(Prop_Neg = mean(neg.prop, na.rm=TRUE), Prop_Pos = mean(pos.prop, na.rm=TRUE), Prop_Amb=mean(amb.prop, na.rm=T), "n"=sum(!is.na(oth.value)))
 
-summary(lm(neg.prop ~ condition.order, data=tidy.codes.sum))
+print(summary(lm(neg.prop ~ condition.order, data=tidy.codes.sum)))
 
 ##################################
 ## Bar graphs for main findings ##
 ##################################
 
-treat <- factor(treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+treat <- factor(k1_df$treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
 
-vid.graph <- BarChart(depvar = vid.num, groupvar = treat, data = k1_df, ytitle = "No. of videos (0-2)", title = "Skills building", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(1, 1.75))
+vid.graph <- BarChart(depvar = k1_df$vid.num, groupvar = treat, ytitle = "No. of videos (0-2)", title = "Skills building", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(1, 1.75))
 
-sel.graph <- BarChart(depvar = sel.score.avg, groupvar = treat, data = k1_df, ytitle = "Self-rating (1-5)", title = "Self-efficacy", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(3, 3.75))
+sel.graph <- BarChart(depvar = k1_df$sel.score.avg, groupvar = treat, ytitle = "Self-rating (1-5)", title = "Self-efficacy", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(3, 3.75))
 
-sti.graph <- BarChart(depvar = sti.score.avg, groupvar = treat, data = k1_df, ytitle = "Self-rating (1-5)", title = "Stigma", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(2, 2.75))
+sti.graph <- BarChart(depvar = k1_df$sti.score.avg, groupvar = treat, ytitle = "Self-rating (1-5)", title = "Stigma", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(2, 2.75))
 
-ses.lad.y2.graph <- BarChart(depvar = ses.lad.y2, groupvar = treat, data = k1_df, title = "Anticipated social mobility", ytitle = "Ladder score (1-10)", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(mean(ses.lad.y2, na.rm = TRUE) - 0.5 * sd(ses.lad.y2, na.rm = TRUE), mean(ses.lad.y2, na.rm = TRUE) + 0.5 * sd(ses.lad.y2, na.rm = TRUE)))
+ses.lad.y2.graph <- BarChart(depvar = k1_df$ses.lad.y2, groupvar = treat, title = "Anticipated social mobility", ytitle = "Ladder score (1-10)", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(mean(k1_df$ses.lad.y2, na.rm = TRUE) - 0.5 * sd(k1_df$ses.lad.y2, na.rm = TRUE), mean(k1_df$ses.lad.y2, na.rm = TRUE) + 0.5 * sd(k1_df$ses.lad.y2, na.rm = TRUE)))
 
 # Annotate with significance levels #
 
 vid.graph <- vid.graph +
     geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = "†", textsize = 3, y_position = 1.5, vjust = -0.2) + 
     geom_signif(comparisons=list(c("Poverty \n Alleviation", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 1.625, vjust = 0.2)
-
 
 sel.graph <- sel.graph + 
     geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = "*", textsize = 5, y_position = 3.525, vjust = 0.2) + 

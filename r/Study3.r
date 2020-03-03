@@ -463,15 +463,15 @@ print(appendix, target = here("doc", "S3_appendix.docx"))
 ## Bar graphs for main findings ##
 ##################################
 
-treat <- factor(treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+treat <- factor(u1_df$treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
 
-amount.graph <- BarChart(depvar = donation_org, groupvar = treat, data = u1_df, ytitle = "Dollars donated (USD)", title = "A", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 100), tick = 20)
+amount.graph <- BarChart(depvar = u1_df$donation_org, groupvar = treat, ytitle = "Dollars donated (USD)", title = "A", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 100), tick = 20)
 
-donate.graph <- BarChart(depvar = donated, groupvar = treat, data = u1_df, ytitle = "Proportion who donated any amount", title = "B", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 1), tick = 0.2)
+donate.graph <- BarChart(depvar = u1_df$donated, groupvar = treat, ytitle = "Proportion who donated any amount", title = "B", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 1), tick = 0.2)
 
-encourage.graph <- BarChart(depvar = encourage, groupvar = treat, data = u1_df, ytitle = "Level (1-5)", title = "C) Encourage others to donate", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 5), tick = 1)
+encourage.graph <- BarChart(depvar = u1_df$encourage, groupvar = treat, ytitle = "Level (1-5)", title = "C) Encourage others to donate", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 5), tick = 1)
 
-status.graph <- BarChart(depvar = donor_status, groupvar = treat, data = u1_df, ytitle = "Ladder score (1-10)", title = "D) Donor status", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 10), tick = 2)
+status.graph <- BarChart(depvar = u1_df$donor_status, groupvar = treat, ytitle = "Ladder score (1-10)", title = "D) Donor status", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 10), tick = 2)
 
 # Annotate with significance levels #
 

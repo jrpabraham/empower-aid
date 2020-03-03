@@ -57,79 +57,6 @@ k1_df$msg1 <- recode(as.numeric(as.factor(k1_df$ORG_MESSAGE)), `2` = 0, `3` = 2)
 k1_df$msg2 <- recode(as.numeric(as.factor(k1_df$ORG_MESSAGE_2)), `2` = 0)
 k1_df$msg3 <- recode(as.numeric(as.factor(k1_df$ORG_MESSAGE_3)), `3` = 2)
 
-## Dataset for stigma coding ##
-
-tidy.codes.2 <- k1_df %>%
-  dplyr::select(por.oth_1_RA_CODE, por.oth_2_RA_CODE, por.oth_3_RA_CODE,
-                ind.oth_1_RA_CODE, ind.oth_2_RA_CODE, ind.oth_3_RA_CODE,
-                com.oth_1_RA_CODE, com.oth_2_RA_CODE, com.oth_3_RA_CODE,
-                condition.order, survey.id) %>%
-  dplyr::mutate_at(vars(matches("oth")),funs(as.factor)) %>%
-  rename(oth.1_por = por.oth_1_RA_CODE, oth.2_por = por.oth_2_RA_CODE, oth.3_por = por.oth_3_RA_CODE,
-         oth.1_ind = ind.oth_1_RA_CODE, oth.2_ind = ind.oth_2_RA_CODE, oth.3_ind = ind.oth_3_RA_CODE,
-         oth.1_com = com.oth_1_RA_CODE, oth.2_com = com.oth_2_RA_CODE, oth.3_com = com.oth_3_RA_CODE) 
-
-tidy.codes.2$oth.1 <- coalesce(tidy.codes.2$oth.1_por, tidy.codes.2$oth.1_ind, tidy.codes.2$oth.1_com) 
-tidy.codes.2$oth.2 <- coalesce(tidy.codes.2$oth.2_por, tidy.codes.2$oth.2_ind, tidy.codes.2$oth.2_com) 
-tidy.codes.2$oth.3 <- coalesce(tidy.codes.2$oth.3_por, tidy.codes.2$oth.3_ind, tidy.codes.2$oth.3_com) 
-
-tidy.codes.3 <- tidy.codes.2 %>%
-  dplyr::select(oth.1, oth.2, oth.3, condition.order, survey.id) %>% 
-  gather(contains('oth'), key=prompt, value=oth.value)
-
-tidy.codes.3$oth.neg <- as.logical(tidy.codes.3$oth.value == "negative") 
-tidy.codes.3$oth.pos <- as.logical(tidy.codes.3$oth.value == "positive") 
-
-tidy.codes.sum <- tidy.codes.3 %>%
-  group_by(survey.id) %>%
-  mutate(neg.prop = sum(oth.value=="negative", na.rm=T) / length(which(!is.na(oth.value)))) %>%
-  mutate(pos.prop = sum(oth.value=="positive", na.rm=T) / length(which(!is.na(oth.value)))) %>%
-  mutate(amb.prop = sum(oth.value=="ambig", na.rm=T) / length(which(!is.na(oth.value)))) 
-
-## Self-efficacy ##
-
-for (var in c(k1_df$sel.con, k1_df$sel.pers, k1_df$sel.com, k1_df$sel.prob, k1_df$sel.bett)) {
-
-    var[var < 0] <- NA
-
-}
-
-k1_df$sel.score.avg <- scale.means(k1_df, "sel.con", "sel.pers", "sel.com", "sel.prob", "sel.bett", na.rm = T)
-k1_df$sel.score <- scale(k1_df$sel.con) + scale(k1_df$sel.pers) + scale(k1_df$sel.com) + scale(k1_df$sel.prob) + scale(k1_df$sel.bett)
-k1_df$sel.score.z <- scale(k1_df$sel.score)
-
-## Stigma ##
-
-for (var in c(k1_df$jud.fam, k1_df$jud.com, k1_df$jud.judg, k1_df$jud.emb, k1_df$jud.ups)) {
-
-    var[var < 0] <- NA
-
-}
-
-k1_df$jud.fam.r <- 6 - k1_df$jud.fam
-k1_df$jud.com.r <- 6 - k1_df$jud.com
-
-k1_df$sti.score.avg <- scale.means(k1_df, "jud.fam.r", "jud.com.r", "jud.judg", "jud.emb", "jud.ups", na.rm = T)
-k1_df$sti.score <- scale(k1_df$jud.fam.r) + scale(k1_df$jud.com.r) + scale(k1_df$jud.judg) + scale(k1_df$jud.emb) + scale(k1_df$jud.ups)
-k1_df$sti.score.z <- scale(k1_df$sti.score)
-
-## Affect (5-point scale) ##
-
-for (var in c(k1_df$aff.pos, k1_df$aff.ash, k1_df$aff.pow, k1_df$aff.fina)) {
-
-    var[var < 0] <- NA
-
-}
-
-k1_df$aff.pos.s <- k1_df$aff.pos * (5/6)
-
-k1_df$aff.ash.r <- 6 - k1_df$aff.ash
-k1_df$aff.fina.r <- 6 - k1_df$aff.fina
-
-k1_df$aff.score.avg <- scale.means(k1_df, "aff.pos.s", "aff.pow", "aff.ash.r", "aff.fina.r", na.rm = T)
-k1_df$aff.score <- scale(k1_df$aff.pos) + scale(k1_df$aff.pow) + scale(k1_df$aff.ash.r) + scale(k1_df$aff.fina.r)
-k1_df$aff.score.z <- scale(k1_df$aff.score)
-
 ## Video selection ##
 
 k1_df$vid.imp1 <- k1_df$vid.dec1 %in% c(3, 5)
@@ -249,4 +176,4 @@ k1_df$soc.age.c <- scale(k1_df$soc.age, scale = FALSE)
 k1_df$ses.unemp.c <- scale(k1_df$ses.unemp, scale = FALSE)
 k1_df$soc.sav.c <- scale(k1_df$soc.sav, scale = FALSE)
 
-save(k1_df, tidy.codes.sum, file = here("data", "KenyaData.RData"))
+save(k1_df, file = here("data", "KenyaData.RData"))

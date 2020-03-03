@@ -293,17 +293,25 @@ LineBreak <- function(file) {
     file <- body_add_par(file , " ", style = "Normal")
 }
 
-BarChart <- function(depvar, groupvar, data, title, ytitle, xtitle, fillcolor, bounds, tick) {
+BarChart <- function(depvar, groupvar, title, ytitle, xtitle, fillcolor, bounds, tick) {
 
     quo_groupvar <- enquo(groupvar)
     quo_depvar <- enquo(depvar)
 
-    stats <- data[complete.cases(depvar), ] %>% group_by(!!quo_groupvar) %>% summarise(mean = mean(!!quo_depvar), sd = sd(!!quo_depvar), obs = length(!!quo_depvar))
-    stats <- cbind(as.data.frame(table(treat))[, 1], as.data.frame(stats[, 2]), as.data.frame(stats[, 3] / sqrt(stats[, 4])))
-    colnames(stats) <- c(deparse(substitute(groupvar)), "mean", "SE")
+    if (!is.factor(groupvar)) groupvar <- as.factor(groupvar)
+
+    data <- as.data.frame(cbind(depvar, groupvar))
+    data <- data[complete.cases(data), ]
+    
+    stats <- group_by(data, groupvar) %>%
+        summarise(mean = mean(depvar), sd = sd(depvar), obs = length(depvar))
+
+    stats <- cbind(as.data.frame(table(groupvar))[, 1], as.data.frame(stats[, 2]), as.data.frame(stats[, 3] / sqrt(stats[, 4])))
+
+    colnames(stats) <- c("levels", "mean", "SE")
 
     Graph <- ggplot(stats,
-      aes(!!quo_groupvar, mean, fill = as.factor(!!quo_groupvar))) +
+      aes(levels, mean, fill = as.factor(levels))) +
       ggtitle(title) +
       labs(y = ytitle, x = xtitle) +
       coord_cartesian(ylim = bounds) +
