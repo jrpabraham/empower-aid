@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body {
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body {
   max-width: 980px;
   border: 1px solid #ddd;
   outline: 1300px solid #fff;
@@ -1059,42 +1057,33 @@ body .markdown-body
 .codehilite .gc{color:#999;background-color:#EAF2F5}
 </style><title>README</title></head><body><article class="markdown-body"><h1 id="toward-a-science-of-delivering-aid-with-dignity-experimental-evidence-and-local-forecasts-from-kenya">Toward a science of delivering aid with dignity: Experimental evidence and local forecasts from Kenya<a class="headerlink" href="#toward-a-science-of-delivering-aid-with-dignity-experimental-evidence-and-local-forecasts-from-kenya" title="Permanent link"></a></h1>
 <p><em>Catherine Thomas, Nicholas Otis, Justin Abraham, Hazel Markus, and Gregory Walton</em></p>
-<p>This is a public repository containing replication files for “Toward a
- science of delivering aid with dignity: Experimental evidence and local
- forecasts from Kenya”. Experimental data was collected using 
-questionnaires programmed in Qualtrics. Results published in the 
-manuscript and appendix were analyzed using R-3.6.2. To replicate data 
-analysis, first open <code>START.Rproj</code> in the root directory. Run <code>K1_analysis.r</code> to produce results for Study 1 in Kenya, <code>Forecast.r</code> to produce results for Study 2, and <code>U1_analysis.r</code> for Study 3 in the US.</p>
-<h3 id="directories">Directories<a class="headerlink" href="#directories" title="Permanent link"></a></h3>
+<p>This is a public repository containing replication files for &ldquo;Toward a science of delivering aid with dignity: Experimental evidence and local forecasts from Kenya&rdquo;. Experimental data was collected using questionnaires programmed in Qualtrics. Results published in the manuscript and appendix were analyzed using R-3.6.2. To replicate data analysis, first open <code>empower-aid.Rproj</code> in the root directory. Run <code>Study1.r</code> to produce results for Study 1 in Kenya, <code>Study2.r</code> to produce forecasting results in Study 2, and <code>Study3.r</code> for Study 3 in the US.</p>
+<h3 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link"></a></h3>
 <ul>
-<li><code>data/</code>: Folder containing individual data.</li>
-<li><code>doc/</code>: Folder containing tables published in the manuscript and appendix.</li>
-<li><code>graphics/</code>: Folder containing figures published in the manuscript and appendix.</li>
-<li><code>r/:</code> Folder containing source code for analyzing data and producing tables and figures.</li>
+<li><code>data/</code>: Folder containing individual data.<ul>
+<li><code>KenyaData.Rdata</code> contains all of the variables used for empirical analysis for Study 2.</li>
+<li><code>USData.Rdata</code> contains all of the variables used for empirical analysis for Study 3.</li>
 </ul>
-<h3 id="data">Data<a class="headerlink" href="#data" title="Permanent link"></a></h3>
-<ul>
-<li><code>K1_Field_Survey.csv</code> contains de-identified individual data for the Kenyan experiment (Study 2).</li>
-<li><code>K1_Clean_Data.csv</code> contains all of the variables used for empirical analysis for Study 2.</li>
-<li><code>U1_MTurk_Eligible.csv</code> contains de-identified individual
- data for the US donor experiment (Study 3). This only includes subjects
- after screening for eligibility.</li>
-<li><code>U1_Clean_Data.csv</code> contains all of the variables used for empirical analysis for Study 3.</li>
+</li>
+<li><code>doc/</code>: Folder containing tables published in the manuscript and appendix.<ul>
+<li><code>S1_appendix.docx</code> is an RTF file which includes all of the tables related to Study 1.</li>
+<li><code>S2_appendix.docx</code> is an RTF file which includes the forecasting regression in Study 2.</li>
+<li><code>S3_appendix.docx</code> is an RTF file which includes all of the tables related to Study 3.</li>
 </ul>
-<h3 id="source-code">Source Code<a class="headerlink" href="#source-code" title="Permanent link"></a></h3>
-<ul>
-<li><code>K1_analysis.r</code> is the source code for Study 1 that takes the raw Kenyan data and outputs clean data, tables of results, and figures.</li>
-<li><code>Forecast.r</code> is the source code for Study 2 that takes uses the Kenyan data to produce forecasting results and figures.</li>
-<li><code>U1_analysis.r</code> is the source code for Study 3 that takes the raw US data and outputs clean data, tables of results, and figures.</li>
+</li>
+<li><code>graphics/</code>: Folder containing figures published in the manuscript and appendix.<ul>
+<li><code>Figure1.png</code></li>
+<li><code>Figure2.png</code></li>
+<li><code>FigureS1.png</code></li>
+<li><code>FigureS2.png</code></li>
+<li><code>FigureS3.png</code></li>
 </ul>
-<h3 id="list-of-outputs">List of Outputs<a class="headerlink" href="#list-of-outputs" title="Permanent link"></a></h3>
-<ol>
-<li><code>doc/K1_appendix.docx</code> is an RTF file which includes all of the tables related to Study 1.</li>
-<li><code>doc/FC_appendix.docx</code> is an RTF file which includes the forecasting regression in Study 2.</li>
-<li><code>doc/U1_appendix.docx</code> is an RTF file which includes all of the tables related to Study 3.</li>
-<li><code>graphics/Figure1.png</code></li>
-<li><code>graphics/Figure2.png</code></li>
-<li><code>graphics/FigureS1.png</code></li>
-<li><code>graphics/FigureS2.png</code></li>
-<li><code>graphics/FigureS3.png</code></li>
-</ol></article></body></html>
+</li>
+<li><code>r/:</code> Folder containing source code for analyzing data and producing tables and figures.<ul>
+<li><code>Study1.r</code> is the source code for Study 1 that takes the Kenyan data and outputs clean data, tables of results, and figures.</li>
+<li><code>Study2.r</code> is the source code for Study 2 that takes uses the Kenyan data to produce forecasting results and figures.</li>
+<li><code>Study3.r</code> is the source code for Study 3 that takes the US data and outputs clean data, tables of results, and figures.</li>
+<li><code>Funs.r</code> loads user-defined functions used in the data analysis.</li>
+</ul>
+</li>
+</ul></article></body></html>
