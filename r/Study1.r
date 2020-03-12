@@ -80,7 +80,7 @@ WriteHeading(appendix, "Data analysis for Kenya recipient experiment (study 1)")
 ## Summary statistics ##
 ########################
 
-SumTable <- SumStats(varlist = c("soc.fem", "soc.pri", "soc.age", "ses.unemp", "soc.sav", "soc.con", "soc.inc"), labels = c("Female", "Completed std. 8", "Age", "Unemployed", "Holds savings", "Consumption (Ksh.)", "Income (Ksh.)"), data = k1_df)
+SumTable <- SumStats(varlist = c("soc.fem", "soc.pri", "soc.age", "ses.unemp", "soc.sav", "soc.con", "soc.inc"), labels = c("Female", "Completed std. 8", "Age", "Unemployed", "Holds savings", "Consumption (KSh)", "Income (KSh)"), data = k1_df)
 
 ## Print table to doc ##
 
@@ -90,6 +90,8 @@ WriteTitle(appendix, "Summary of sample sociodemographic characteristics for stu
 big_border <- fp_border(width = 2)
 std_border <- fp_border(width = 1)
 
+note <- "Note: \"Female\" is an indicator variable for identifying as a woman \"Completed std. 8\" is an indicator for having completed primary school. \"Age\" is the self-reported age of the respondent. \"Unemployed\" is an indicator for being unemployed. \"Holds savings\" is an indicator for having savings of at least KSh 1000. \"Consumption\" is a variable for consumption in the last seven days. \"Income\" is a variable for earned income in the past month."
+
 flextable <- regulartable(as.data.frame(SumTable)) %>%
     align(align = "center") %>%
     align(j = 1, part = "body", align = "left") %>%
@@ -97,6 +99,8 @@ flextable <- regulartable(as.data.frame(SumTable)) %>%
     hline_top(part = "all", border = big_border) %>%
     hline_top(part = "body", border = big_border) %>%
     hline_bottom(part = "body", border = big_border) %>%
+    add_footer(Outcome = note) %>%
+    merge_at(j = 1:7, part = "footer") %>%
     flextable::font(fontname = "Times New Roman", part = "all") %>%
     italic(part = "footer") %>%
     fontsize(size = 10, part = "all") %>%

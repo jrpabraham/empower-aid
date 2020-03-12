@@ -43,6 +43,8 @@ WriteTitle(appendix, "Summary of sample sociodemographic characteristics for stu
 big_border <- fp_border(width = 2)
 std_border <- fp_border(width = 1)
 
+note <- "Note: \"Prior donor\" is an indicator variable for having made charitable contributions in the past. \"Age\" is the self-reported age of the respondent. \"Female\" is an indicator for identifying as a woman. \"Annual income (USD)\" is the self-reported annual income of the respondent. \"HH size\" is household size including the respondent. \"College educated\" is an indicator for having received a college education. \"Social class\" is an indicator for having at least one parent receive a college education. \"Racial minority\" is an indicator variable for identifying as Asian, Black, Hispanic, Native American, or Other. \"Religiosity\" measures strength of religious belief on a 5-point scale. \"Christian\" is an indicator for identifying as a Christian. \"Democrat\" is an indicator for affiliating with the Democratic Party."
+
 flextable <- regulartable(as.data.frame(SumTable)) %>%
     align(align = "center") %>%
     align(j = 1, part = "body", align = "left") %>%
@@ -50,6 +52,8 @@ flextable <- regulartable(as.data.frame(SumTable)) %>%
     hline_top(part = "all", border = big_border) %>%
     hline_top(part = "body", border = big_border) %>%
     hline_bottom(part = "body", border = big_border) %>%
+    add_footer(Outcome = note) %>%
+    merge_at(j = 1:7, part = "footer") %>%
     flextable::font(fontname = "Times New Roman", part = "all") %>%
     italic(part = "footer") %>%
     fontsize(size = 10, part = "all") %>%
