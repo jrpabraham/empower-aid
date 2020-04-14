@@ -649,4 +649,4 @@ ses.lad.y2.graph <- ses.lad.y2.graph +
 # Arrange figures in grid #
 
 Figure1 <- plot_grid(vid.graph, sel.graph, ses.lad.y2.graph, sti.graph, nrow = 1, ncol = 4, labels = c("A. Economic Behavior", "B. Psychological Outcomes", "", ""), label_size = 12, scale = 0.85, hjust = -0.2)
-save_plot(here("graphics", "Figure1.png"), Figure1, base_height = 3, base_width = 10, dpi=300)
+save_plot(here("graphics", "Figure1.png"), Figure1, base_height = 3, base_width = 10, dpi=1200)

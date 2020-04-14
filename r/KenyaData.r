@@ -177,3 +177,4 @@ k1_df$ses.unemp.c <- scale(k1_df$ses.unemp, scale = FALSE)
 k1_df$soc.sav.c <- scale(k1_df$soc.sav, scale = FALSE)
 
 save(k1_df, file = here("data", "KenyaData.RData"))
+write.csv(k1_df, file = here("data", "KenyaData.csv"))

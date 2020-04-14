@@ -134,7 +134,7 @@ Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
 
 FigureS1 <- ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop..)) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("No. of business videos chosen") + scale_y_continuous(labels = scales::percent) + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) + theme_bw()
 
-save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_width = 8, dpi=300)
+save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_width = 8, dpi=3120)
 
 ##################################
 ## Figures for synthetic pilots ##
@@ -241,7 +241,7 @@ Figure2B <- ggplot(df2c, aes(x = N, y = value, color = variable)) +
            colour=guide_legend(keywidth = 1.5, keyheight = 0.7))
 
 Figure2 <- plot_grid(Figure2A, Figure2B, nrow = 1, ncol = 2, rel_widths = c(1, 1.61803398875))
-save_plot(here("graphics", "Figure2.png"), Figure2, base_height = 4, base_width = 8, dpi=300)
+save_plot(here("graphics", "Figure2.png"), Figure2, base_height = 4, base_width = 8, dpi=3120)
 
 #Figure S2
 
@@ -376,4 +376,4 @@ FigureS2<-plot_grid(ggarrange(PanelA,
                    PanelD,
                    PanelF,ncol=1))
 
-save_plot(here("graphics", "FigureS2.png"), FigureS2, base_height = 9, base_width = 6, dpi=300)
+save_plot(here("graphics", "FigureS2.png"), FigureS2, base_height = 9, base_width = 6, dpi=1200)

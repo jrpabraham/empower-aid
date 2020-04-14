@@ -81,3 +81,4 @@ u1_df$is.chr.c <- scale(u1_df$is.chr, scale = FALSE)
 u1_df$is.dem.c <- scale(u1_df$is.dem, scale = FALSE)
 
 save(u1_df, file = here("data", "USData.RData"))
+write.csv(u1_df, file = here("data", "USData.csv"))
