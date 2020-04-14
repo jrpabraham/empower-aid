@@ -320,54 +320,48 @@ FigTheme <- function ()
 
 #B1
 
-PanelA <- ggplot(DenDatN50B1,
-                aes(COEF, fill = as.factor(VAR))) +
- geom_vline(xintercept = 0.06970, size=.9)+
+PanelA <- ggplot(DenDatN50B1, aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.06970,  linetype="dashed", color = "black", size=1)+
  labs(subtitle="N=50") +
  ylab("")+xlab("") +xlim(-.6,.6)+
- coord_cartesian(ylim = c(0, 20))+
- geom_density(alpha = 1/4) + FigTheme()
+ coord_cartesian(ylim = c(1, 20))+
+ geom_density(alpha = .5,color=NA) + FigTheme()
 
-PanelC <- ggplot(DenDatN100B1,
-                aes(COEF, fill = as.factor(VAR))) +
- geom_vline(xintercept = 0.06970, size=.9)+
+PanelC <- ggplot(DenDatN100B1,aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.06970,  linetype="dashed", color = "black", size=1)+
  labs(subtitle="N=100") +
- ylab("")+xlab("") +xlim(-.6,.6)+ coord_cartesian(ylim = c(0, 20))+
- geom_density(alpha = 1/4) + FigTheme()
+ ylab("")+xlab("") +xlim(-.6,.6)+ coord_cartesian(ylim = c(1, 20))+
+ geom_density(alpha = .5,color=NA) + FigTheme()
 
-PanelE <- ggplot(DenDatN150B1,
-                aes(COEF, fill = as.factor(VAR))) +
- geom_vline(xintercept = 0.06970, size=.9)+
+PanelE <- ggplot(DenDatN150B1,aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.06970,  linetype="dashed", color = "black", size=1)+
  labs(subtitle="N=150") +
  ylab("")+xlab("Individual Empowerment coefs.")+xlim(-.6,.6)+
- coord_cartesian(ylim = c(0, 20))+
- geom_density(alpha = 1/4) + FigTheme()
+ coord_cartesian(ylim = c(1, 20))+
+ geom_density(alpha = .5,color=NA) + FigTheme()
 
 #B2
 
-PanelB <- ggplot(DenDatN50B2,
-                aes(COEF, fill = as.factor(VAR))) +
- geom_vline(xintercept = 0.12916, size=.9)+
+PanelB <- ggplot(DenDatN50B2,aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.12916,  linetype="dashed", color = "black", size=1)+
  ylab("")+xlab("") +xlim(-.6,.6)+
- coord_cartesian(ylim = c(0, 20))+  
+ coord_cartesian(ylim = c(1, 20))+  
  labs(subtitle="") +
- geom_density(alpha = 1/4) + FigTheme()
+ geom_density(alpha = .5,color=NA) + FigTheme()
 
-PanelD <- ggplot(DenDatN100B2,
-                aes(COEF, fill = as.factor(VAR))) +
- geom_vline(xintercept = 0.12916, size=.9)+
+PanelD <- ggplot(DenDatN100B2, aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.12916,  linetype="dashed", color = "black", size=1)+
  ylab("")+xlab("") +xlim(-.6,.6)+
- coord_cartesian(ylim = c(0, 20))+  
+ coord_cartesian(ylim = c(1, 20))+  
  labs(subtitle="") +
- geom_density(alpha = 1/4) + FigTheme()
+ geom_density(alpha = .5,color=NA) + FigTheme()
 
-PanelF <- ggplot(DenDatN150B2,
-                aes(COEF, fill = as.factor(VAR))) +
- geom_vline(xintercept = 0.12916, size=.9)+
+PanelF <- ggplot(DenDatN150B2, aes(COEF, fill = as.factor(VAR))) +
+ geom_vline(xintercept = 0.12916,  linetype="dashed", color = "black", size=1)+
  ylab("")+xlab("Community Empowerment coefs.") +xlim(-.6,.6)+
- coord_cartesian(ylim = c(0, 20))+  
+ coord_cartesian(ylim = c(1, 20))+  
  labs(subtitle="") +
- geom_density(alpha = 1/4) + FigTheme()
+   geom_density(alpha = .5,color=NA) + FigTheme()
 
 FigureS2<-plot_grid(ggarrange(PanelA,
                    PanelC,
