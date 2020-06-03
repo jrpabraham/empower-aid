@@ -176,5 +176,9 @@ k1_df$soc.age.c <- scale(k1_df$soc.age, scale = FALSE)
 k1_df$ses.unemp.c <- scale(k1_df$ses.unemp, scale = FALSE)
 k1_df$soc.sav.c <- scale(k1_df$soc.sav, scale = FALSE)
 
+## Remove extraneous variables ##
+
+k1_df <- k1_df[grep("RA_coder", names(k1_df), value = TRUE, invert = TRUE)]
+
 save(k1_df, file = here("data", "KenyaData.RData"))
 write.csv(k1_df, file = here("data", "KenyaData.csv"))
