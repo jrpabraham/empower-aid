@@ -156,7 +156,7 @@ scale.means = function (df, ..., na.rm=FALSE) {
 
 RandomSample <- function(df, n, by) {
     
-    sampledby <- sample(unique(by), n)
+    sampledby <- sample(unique(by), n, replace=TRUE)
     resample <- df[(by %in% sampledby), ]
     return(resample)
 
