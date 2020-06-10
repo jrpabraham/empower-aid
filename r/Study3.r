@@ -13,7 +13,7 @@ if (!require("pacman")) {
     library("pacman")
 }
 
-p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools")
+p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools", "magick")
 
 source(here("r", "Funs.r"), echo = TRUE)
 
@@ -488,4 +488,10 @@ donate.graph <- donate.graph +
 # Arrange figures in grid #
 
 FigureS3 <- plot_grid(amount.graph, donate.graph, nrow = 1, ncol = 2, labels = c("", ""), hjust = 0.5, label_size = 12, scale = 0.85)
-save_plot(here("graphics", "FigureS3.png"), FigureS3, base_height = 4, base_width = 7, dpi = 1200)
+save_plot(here("graphics", "FigureS3.png"), FigureS3, base_height = 4, base_width = 7, dpi = 300)
+
+# Convert to SVG #
+
+FigureS3SVG <- image_read(here("graphics", "FigureS3.png")) %>%
+    image_convert("svg") %>%
+    image_write(path=here("graphics", "FigureS3.svg"), format="svg")
