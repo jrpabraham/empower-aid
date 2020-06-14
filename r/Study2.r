@@ -90,7 +90,7 @@ print(appendix, target = here("doc", "S2_appendix.docx"))
 
 attach(forecast.long)
 
-WhichTreat <- factor(WhichTreat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+WhichTreat <- factor(WhichTreat, labels = c("Poverty\nAlleviation", "Individual\nEmpowerment", "Community\nEmpowerment"))
 
 for.stats <- forecast.long[complete.cases(pred), ] %>% group_by(WhichTreat) %>% summarise(mean = mean(pred), sd = sd(pred), obs = length(pred))
 for.stats <- cbind(as.data.frame(c("Forecast results", "Forecast results", "Forecast results")), as.data.frame(table(WhichTreat))[, 1], as.data.frame(for.stats[, 2]), as.data.frame(for.stats[, 3] / sqrt(for.stats[, 4])))
@@ -98,7 +98,7 @@ colnames(for.stats) <- c("type", "treat", "mean", "SE")
 
 attach(k1_df)
 
-k1_df$treat.long <- factor(treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+k1_df$treat.long <- factor(treat, labels = c("Poverty\nAlleviation", "Individual\nEmpowerment", "Community\nEmpowerment"))
 
 exp.stats <- k1_df[complete.cases(vid.imp1), ] %>% group_by(k1_df$treat.long) %>% summarise(mean = mean(vid.imp1), sd = sd(vid.imp1), obs = length(vid.imp1))
 exp.stats <- cbind(as.data.frame(c("Experimental results", "Experimental results", "Experimental results")), as.data.frame(table(k1_df$treat.long))[, 1], as.data.frame(exp.stats[, 2]), as.data.frame(exp.stats[, 3] / sqrt(exp.stats[, 4])))
@@ -108,9 +108,9 @@ Fig2aData <- rbind(exp.stats, for.stats)
 
 ## Plot means ##
 
-Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) + 
+Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
   geom_bar(position = position_dodge(width=0.9), stat = "identity", width = .7) +
-  ggtitle("A. Comparison of forecasts \n to experimental results") +
+  ggtitle("A Comparison of forecasts to experimental results") +
   geom_errorbar(aes(x = type, ymin = mean - 1.96 * SE, ymax = mean + 1.96 * SE), position = position_dodge(width=0.9), width=.3, size=0.7) +
   scale_fill_manual(values=c('#c6c6c7', '#7ca6c0', '#c05746')) +
   labs(y = "Prop. selecting a business skills video first", x ="") +
@@ -118,7 +118,7 @@ Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        panel.grid.major.y = element_line(size = .15, color = "black", linetype = "dotted"),
+        panel.grid.major.y = element_line(size = .2, color = "black", linetype = "dashed"),,
         axis.line = element_line(colour = "black"),
         axis.text.x = element_text(size = 8),
         axis.text.y = element_text(size = 8),
@@ -126,21 +126,16 @@ Figure2A <- ggplot(Fig2aData, aes(fill=treat, y=mean, x=type)) +
         legend.title = element_blank(),
         plot.title = element_text(size=10, face="bold"),
         text = element_text(size=8)) +
-        geom_signif(y_position=c(0.82, 0.67, 0.72), xmin=c(0.7, 1.7, 1.7), xmax=c(1.3, 2, 2.3), annotation=c("*", "*", "*"), vjust = 0.2)
+        geom_signif(y_position=c(0.82, 0.67, 0.72), xmin=c(0.7, 1.7, 1.7), xmax=c(1.3, 2, 2.3), annotation=c("*", "*", "*"), vjust = 0.2) + theme(legend.justification=c(0,-.22), legend.position=c(0,-.22), legend.direction = "horizontal", plot.margin = margin(0, 0, .75, 0, "cm")) +
+       theme(plot.title = element_text(hjust=-.05, size=8.5))
 
 ###############################
 ## Histogram of video choice ##
 ###############################
 
-FigureS1 <- ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop..)) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("No. of business videos chosen") + scale_y_continuous(labels = scales::percent) + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) + theme_bw()
-
-save_plot(here("graphics", "FigureS1.png"), FigureS1, base_height = 5, base_width = 8, dpi=300)
-
-# Convert to SVG #
-
-FigureS1SVG <- image_read(here("graphics", "FigureS1.png")) %>%
-    image_convert("svg") %>%
-    image_write(path=here("graphics", "FigureS1.svg"), format="svg")
+pdf(here("graphics", "FigureS1.pdf"), width = 8, height = 5, encoding = "MacRoman")
+ggplot(k1_df, aes(x= vid.num,  group=condition.order)) + geom_bar(aes(y = ..prop..)) + facet_grid(~condition.order) + geom_text(aes( label = scales::percent(..prop..), y= ..prop.. ), stat= "count", vjust = -.5) + labs(y = "Percent") + guides(fill = FALSE) + xlab("No. of business videos chosen") + scale_y_continuous(labels = scales::percent) + aes(fill = condition.order) + scale_fill_manual(values = c('#c6c6c7', '#7ca6c0', '#c05746')) + theme_bw()
+dev.off()
 
 ##################################
 ## Figures for synthetic pilots ##
@@ -228,7 +223,7 @@ Figure2B <- ggplot(df2c, aes(x = N, y = value, color = variable)) +
                                 "Sim. pilot: Com. Empowerment",
                                 "Forecasting: Ind. Empowerment",
                                 "Forecasting: Com. Empowerment")) +
-    ggtitle("B. Accuracy of forecasts versus simulated experimental pilots") +
+    ggtitle("B Accuracy of forecasts versus simulated experimental pilots") +
     xlab("Bootstrap sample size across all groups") +
     ylab("Prediction accuracy (negative absolute error)") +
     scale_x_continuous(breaks=seq(25, 150, 25)) +
@@ -244,16 +239,12 @@ Figure2B <- ggplot(df2c, aes(x = N, y = value, color = variable)) +
           text = element_text(size=8)) +
     guides(fill = guide_legend(keywidth = 1, keyheight = 1),
            linetype=guide_legend(keywidth = 1.5, keyheight = 0.7),
-           colour=guide_legend(keywidth = 1.5, keyheight = 0.7))
+           colour=guide_legend(keywidth = 1.5, keyheight = 0.7))+
+       theme(plot.title = element_text(hjust=-.05, size=8.5))
 
-Figure2 <- plot_grid(Figure2A, Figure2B, nrow = 1, ncol = 2, rel_widths = c(1, 1.61803398875))
-save_plot(here("graphics", "Figure2.png"), Figure2, base_height = 4, base_width = 8, dpi=300)
-
-# Convert to SVG #
-
-Figure2SVG <- image_read(here("graphics", "Figure2.png")) %>%
-    image_convert("svg") %>%
-    image_write(path=here("graphics", "Figure2.svg"), format="svg")
+pdf(here("graphics", "Figure2.pdf"), width = 8, height = 4, encoding = "MacRoman")
+plot_grid(Figure2A, Figure2B, nrow = 1, ncol = 2, rel_widths = c(1, 1.5))
+dev.off()
 
 #Figure S2
 
@@ -375,17 +366,12 @@ PanelF <- ggplot(DenDatN150B2, aes(COEF, fill = as.factor(VAR))) +
  labs(subtitle="") +
    geom_density(alpha = .5,color=NA) + FigTheme()
 
-FigureS2<-plot_grid(ggarrange(PanelA,
+
+pdf(here("graphics", "FigureS2.pdf"), width = 6, height = 9, encoding = "MacRoman")
+plot_grid(ggarrange(PanelA,
                    PanelC,
                    PanelE,ncol=1),
          ggarrange(PanelB,
                    PanelD,
                    PanelF,ncol=1))
-
-save_plot(here("graphics", "FigureS2.png"), FigureS2, base_height = 9, base_width = 6, dpi=300)
-
-# Convert to SVG #
-
-FigureS2SVG <- image_read(here("graphics", "FigureS2.png")) %>%
-    image_convert("svg") %>%
-    image_write(path=here("graphics", "FigureS2.svg"), format="svg")
+dev.off()

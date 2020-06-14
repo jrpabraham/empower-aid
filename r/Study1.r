@@ -619,7 +619,7 @@ print(summary(lm(neg.prop ~ condition.order, data=tidy.codes.sum)))
 ## Bar graphs for main findings ##
 ##################################
 
-treat <- factor(k1_df$treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+treat <- factor(k1_df$treat, labels = c("Poverty\nAlleviation", "Individual\nEmpowerment", "Community\nEmpowerment"))
 
 vid.graph <- BarChart(depvar = k1_df$vid.num, groupvar = treat, ytitle = "No. of videos (0-2)", title = "Skills building", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(1, 1.75))
 
@@ -632,27 +632,22 @@ ses.lad.y2.graph <- BarChart(depvar = k1_df$ses.lad.y2, groupvar = treat, title 
 # Annotate with significance levels #
 
 vid.graph <- vid.graph +
-    geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = "†", textsize = 3, y_position = 1.5, vjust = -0.2) + 
-    geom_signif(comparisons=list(c("Poverty \n Alleviation", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 1.625, vjust = 0.2)
+    geom_signif(comparisons = list(c("Poverty\nAlleviation", "Individual\nEmpowerment")), annotations = "†", textsize = 3, y_position = 1.5, vjust = -0.2) +
+    geom_signif(comparisons=list(c("Poverty\nAlleviation", "Community\nEmpowerment")), annotations = "*", textsize = 5, y_position = 1.625, vjust = 0.2)
 
-sel.graph <- sel.graph + 
-    geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = "*", textsize = 5, y_position = 3.525, vjust = 0.2) + 
-    geom_signif(comparisons=list(c("Poverty \n Alleviation", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 3.625, vjust = 0.2)
+sel.graph <- sel.graph +
+    geom_signif(comparisons = list(c("Poverty\nAlleviation", "Individual\nEmpowerment")), annotations = "*", textsize = 5, y_position = 3.525, vjust = 0.2) +
+    geom_signif(comparisons=list(c("Poverty\nAlleviation", "Community\nEmpowerment")), annotations = "*", textsize = 5, y_position = 3.625, vjust = 0.2)
 
-sti.graph <- sti.graph + 
-    geom_signif(comparisons=list(c("Poverty \n Alleviation", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 2.7, vjust = 0.2)
+sti.graph <- sti.graph +
+    geom_signif(comparisons=list(c("Poverty\nAlleviation", "Community\nEmpowerment")), annotations = "*", textsize = 5, y_position = 2.7, vjust = 0.2)
 
-ses.lad.y2.graph <- ses.lad.y2.graph + 
-    geom_signif(comparisons = list(c("Poverty \n Alleviation", "Individual \n Empowerment")), annotations = "*", textsize = 5, y_position = 6.55, vjust = 0.2) + 
-    geom_signif(comparisons=list(c("Poverty \n Alleviation", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 6.75, vjust = 0.2)
+ses.lad.y2.graph <- ses.lad.y2.graph +
+    geom_signif(comparisons = list(c("Poverty\nAlleviation", "Individual\nEmpowerment")), annotations = "*", textsize = 5, y_position = 6.55, vjust = 0.2) +
+    geom_signif(comparisons=list(c("Poverty\nAlleviation", "Community\nEmpowerment")), annotations = "*", textsize = 5, y_position = 6.75, vjust = 0.2)
 
 # Arrange figures in grid #
 
-Figure1 <- plot_grid(vid.graph, sel.graph, ses.lad.y2.graph, sti.graph, nrow = 1, ncol = 4, labels = c("A. Economic Behavior", "B. Psychological Outcomes", "", ""), label_size = 12, scale = 0.85, hjust = -0.2)
-save_plot(here("graphics", "Figure1.png"), Figure1, base_height = 3, base_width = 10, dpi=300)
-
-# Convert to SVG #
-
-Figure1SVG <- image_read(here("graphics", "Figure1.png")) %>%
-    image_convert("svg") %>%
-    image_write(path=here("graphics", "Figure1.svg"), format="svg")
+pdf(here("graphics", "Figure1.pdf"), width = 10, height = 3, encoding = "MacRoman")
+plot_grid(vid.graph, sel.graph, ses.lad.y2.graph, sti.graph, nrow = 1, ncol = 4, labels = c("A Economic Behavior", "B Psychological Outcomes", "", ""), label_size = 12, scale = 0.87, hjust = -.1)
+dev.off()

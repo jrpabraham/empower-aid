@@ -13,7 +13,7 @@ if (!require("pacman")) {
     library("pacman")
 }
 
-p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools", "magick")
+p_load("here", "tidyr", "dplyr", "lmtest", "multiwayvcov", "multcomp", "reshape2", "knitr", "flextable", "officer", "forestplot", "cowplot", "ggplot2", "matrixStats", "ggthemes", "ggsignif", "rstudioapi", "iptools")
 
 source(here("r", "Funs.r"), echo = TRUE)
 
@@ -467,7 +467,7 @@ print(appendix, target = here("doc", "S3_appendix.docx"))
 ## Bar graphs for main findings ##
 ##################################
 
-treat <- factor(u1_df$treat, labels = c("Poverty \n Alleviation", "Individual \n Empowerment", "Community \n Empowerment"))
+treat <- factor(u1_df$treat, labels = c("Poverty\nAlleviation", "Individual\nEmpowerment", "Community\nEmpowerment"))
 
 amount.graph <- BarChart(depvar = u1_df$donation_org, groupvar = treat, ytitle = "Dollars donated (USD)", title = "A", xtitle = "", fillcolor = c('#c6c6c7', '#7ca6c0', '#c05746'), bounds = c(0, 100), tick = 20)
 
@@ -480,18 +480,13 @@ status.graph <- BarChart(depvar = u1_df$donor_status, groupvar = treat, ytitle =
 # Annotate with significance levels #
 
 amount.graph <- amount.graph +
-    geom_signif(comparisons=list(c("Individual \n Empowerment", "Community \n Empowerment")), annotations= "†", textsize = 3, y_position = 50, vjust = -0.2, tip_length = 0.1)
+    geom_signif(comparisons=list(c("Individual\nEmpowerment", "Community\nEmpowerment")), annotations= "†", textsize = 3, y_position = 50, vjust = -0.2, tip_length = 0.1)
 
 donate.graph <- donate.graph + 
-    geom_signif(comparisons=list(c("Individual \n Empowerment", "Community \n Empowerment")), annotations = "*", textsize = 5, y_position = 0.925, vjust = 0.3, tip_length = 0.1)
+    geom_signif(comparisons=list(c("Individual\nEmpowerment", "Community\nEmpowerment")), annotations = "*", textsize = 5, y_position = 0.925, vjust = 0.3, tip_length = 0.1)
 
 # Arrange figures in grid #
 
-FigureS3 <- plot_grid(amount.graph, donate.graph, nrow = 1, ncol = 2, labels = c("", ""), hjust = 0.5, label_size = 12, scale = 0.85)
-save_plot(here("graphics", "FigureS3.png"), FigureS3, base_height = 4, base_width = 7, dpi = 300)
-
-# Convert to SVG #
-
-FigureS3SVG <- image_read(here("graphics", "FigureS3.png")) %>%
-    image_convert("svg") %>%
-    image_write(path=here("graphics", "FigureS3.svg"), format="svg")
+pdf(here("graphics", "FigureS3.pdf"), width = 7, height = 4, encoding = "MacRoman")
+plot_grid(amount.graph, donate.graph, nrow = 1, ncol = 2, labels = c("", ""), hjust = 0.5, label_size = 12, scale = 0.85)
+dev.off()

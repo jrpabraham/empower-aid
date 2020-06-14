@@ -321,9 +321,11 @@ BarChart <- function(depvar, groupvar, title, ytitle, xtitle, fillcolor, bounds,
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             panel.background = element_blank(),
-            panel.grid.major.y = element_line(size = .1, color = "black", linetype = "dotted"),
+            panel.grid.major.y = element_line(size = 0.2, colour = "gray", linetype = "dashed"),
             axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(size = 5),
+            axis.text.x = element_text(size = 5, colour = "black"),
+            axis.text.y = element_text(colour = "black"),
+            axis.ticks = element_line(colour = "black"),
             legend.position = "none") +
       scale_fill_manual(values = fillcolor)
 
